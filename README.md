@@ -7,14 +7,14 @@
   </p>
 </p>
 
-## Installation
+## 📲 Installation
 Run this in your package manager console:
 
 ```
 PM> Install-Package Authware
 ```
 
-## Compilation
+## 🖥️ Compilation
 In-order for compilation of the library, you must have the following:
 
 - .NET SDK 5.0+
@@ -35,8 +35,8 @@ dotnet build
 
 3. All done! Navigate to the bin/Release or bin/Debug folder to find the `.nupkg` or `.dll` file.
 
-## License
+## 📜 License
 Licensed under the MIT license, see LICENSE.MD
 
-## Open-source libraries
+## 📖 Open-source libraries
 - [Device.Id](https://github.com/MatthewKing/DeviceId)
