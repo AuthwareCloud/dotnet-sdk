@@ -4,6 +4,13 @@
   <p align="center">Wrapper for Authware in C# (.NET standard 2.0)</p>
 </p>
 
+## Installation
+Run this in your package manager console:
+
+```
+PM> Install-Package Authware
+```
+
 ## Compilation
 In-order for compilation of the library, you must have the following:
 
