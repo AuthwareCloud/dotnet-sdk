@@ -1,6 +1,6 @@
 <p align="center">
   <img src="https://github.com/AuthwareCloud/AuthwareDotNet/raw/main/authware-s.png" width="75" height="75">
-  <h2 align="center">AuthwareDotNet</h2>
+  <h1 align="center">AuthwareDotNet</h1>
   <p align="center">Wrapper for Authware in C# (.NET standard 2.0)</p>
 </p>
 
