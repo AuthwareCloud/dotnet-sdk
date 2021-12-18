@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <LangVersion>latestmajor</LangVersion>
+        <AssemblyName>Authware</AssemblyName>
+        <RootNamespace>Authware</RootNamespace>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <PackageId>Authware</PackageId>
+        <Title>Authware API wrapper</Title>
+        <Authors>Authware Technologies</Authors>
+        <Description>Authware wrapper for .NET (netstandard2.0)</Description>
+        <Copyright>Copyright 2021 (C) Authware Technologies</Copyright>
+        <PackageProjectUrl>https://github.com/AuthwareCloud/AuthwareDotNet</PackageProjectUrl>
+        <PackageLicenseUrl>https://github.com/AuthwareCloud/AuthwareDotNet/LICENSE.md</PackageLicenseUrl>
+        <PackageIconUrl>https://github.com/AuthwareCloud/AuthwareDotNet/blob/main/authware-s.png</PackageIconUrl>
+        <RepositoryUrl>https://github.com/AuthwareCloud/AuthwareDotNet</RepositoryUrl>
+        <RepositoryType>GitHub</RepositoryType>
+        <PackageTags>authentication</PackageTags>
+        <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+        <Company>Authware Technologies</Company>
+        <Product>Authware</Product>
+        <AssemblyVersion>1.0.0</AssemblyVersion>
+        <FileVersion>1.0.0</FileVersion>
+        <NeutralLanguage>en-US</NeutralLanguage>
+        <SignAssembly>true</SignAssembly>
+        <AssemblyOriginatorKeyFile>authware.snk</AssemblyOriginatorKeyFile>
+        <PublicSign>true</PublicSign>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+        <DocumentationFile>bin\Release\Authware.xml</DocumentationFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+        <PackageReference Include="System.Management" Version="6.0.0" />
+    </ItemGroup>
+
+</Project>
