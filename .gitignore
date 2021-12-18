@@ -11,6 +11,11 @@ global.json
 *.user
 
 ###################
+# strong-name key #
+###################
+Authware/authware.snk
+
+###################
 # compiled source #
 ###################
 *.com
