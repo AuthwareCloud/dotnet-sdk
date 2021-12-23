@@ -75,7 +75,7 @@ namespace Authware
         {
             using var request = new HttpRequestMessage(method, url);
             request.Headers.TryAddWithoutValidation("X-Request-DateTime",
-                DateTime.Now.ToString(CultureInfo.InvariantCulture));
+                DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString());
             if (postData != null)
                 request.Content = new StringContent(JsonConvert.SerializeObject(postData), Encoding.UTF8,
                     "application/json");
