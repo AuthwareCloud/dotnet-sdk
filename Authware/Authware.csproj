@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
@@ -11,12 +11,13 @@
         <Authors>Authware Technologies</Authors>
         <Description>Authware wrapper for .NET (netstandard2.0)</Description>
         <Copyright>Copyright 2021 (C) Authware Technologies</Copyright>
+		<PackageDescription>Authware wrapper for .NET (netstandard2.0)</PackageDescription>
+		<Summary>Authware wrapper for .NET (netstandard2.0)</Summary>
         <PackageProjectUrl>https://github.com/AuthwareCloud/AuthwareDotNet</PackageProjectUrl>
-        <PackageLicenseUrl>https://github.com/AuthwareCloud/AuthwareDotNet/LICENSE.md</PackageLicenseUrl>
-        <PackageIconUrl>https://github.com/AuthwareCloud/AuthwareDotNet/blob/main/authware-s.png</PackageIconUrl>
+        <PackageIconUrl>https://raw.githubusercontent.com/AuthwareCloud/AuthwareDotNet/main/authware-s.png</PackageIconUrl>
         <RepositoryUrl>https://github.com/AuthwareCloud/AuthwareDotNet</RepositoryUrl>
         <RepositoryType>GitHub</RepositoryType>
-        <PackageTags>authentication</PackageTags>
+        <PackageTags>authentication; netstandard; auth; jwt; security; cloud;</PackageTags>
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
         <Company>Authware Technologies</Company>
         <Product>Authware</Product>
@@ -26,11 +27,31 @@
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>authware.snk</AssemblyOriginatorKeyFile>
         <PublicSign>true</PublicSign>
+        <PackageReleaseNotes>Initial release</PackageReleaseNotes>
+        <ApplicationIcon>authware-s.ico</ApplicationIcon>
+        <PackageIcon>authware-s.png</PackageIcon>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+	    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
         <DocumentationFile>bin\Release\Authware.xml</DocumentationFile>
     </PropertyGroup>
+
+    <ItemGroup>
+      <Content Include="authware-s.ico" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Include="..\authware-s.png">
+        <Pack>True</Pack>
+        <PackagePath>\</PackagePath>
+      </None>
+      <None Include="..\README.md">
+        <Pack>True</Pack>
+        <PackagePath>\</PackagePath>
+      </None>
+    </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />

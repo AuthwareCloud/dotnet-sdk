@@ -37,6 +37,3 @@ dotnet build
 
 ## 📜 License
 Licensed under the MIT license, see LICENSE.MD
-
-## 📖 Open-source libraries
-- [Device.Id](https://github.com/MatthewKing/DeviceId)
