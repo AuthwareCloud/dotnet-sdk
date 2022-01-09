@@ -31,6 +31,33 @@ public class AuthwareApplication
     private string _authTokenPath;
 
     /// <summary>
+    ///     Constructs the application with a custom hardware ID system, this allows you to define what you want to use to get
+    ///     a users' hardware ID. This can also allow you to enable hardware ID checking on non-Windows systems.
+    /// </summary>
+    /// <param name="identifierFunction">The function to fetch a hardware ID for a user</param>
+    public AuthwareApplication(Func<string> identifierFunction)
+    {
+        IdentifierFunction = identifierFunction;
+    }
+
+    /// <summary>
+    ///     Constructs the application class instance with default values
+    /// </summary>
+    public AuthwareApplication()
+    {
+    }
+
+    /// <summary>
+    ///     Stores the information responded by <see cref="InitializeApplicationAsync" /> for easy access
+    /// </summary>
+    public Application ApplicationInformation { get; private set; }
+
+    /// <summary>
+    ///     The function for getting a users hardware ID, this is optional, and if not set will be
+    /// </summary>
+    private Func<string> IdentifierFunction { get; } = Identifiers.GetIdentifier;
+
+    /// <summary>
     ///     Initializes and checks the ID passed in against the Authware API to make sure the application is properly setup and
     ///     enabled
     /// </summary>
@@ -44,18 +71,20 @@ public class AuthwareApplication
     public async Task<Application> InitializeApplicationAsync(string applicationId)
     {
         var _ = applicationId ??
-            throw new ArgumentNullException(applicationId, $"{nameof(applicationId)} can not be null");
+                throw new ArgumentNullException(applicationId, $"{nameof(applicationId)} can not be null");
         if (!Guid.TryParse(applicationId, out var _))
             throw new ArgumentException($"{applicationId} is invalid");
 
         _applicationId = applicationId;
         var applicationResponse = await _requester
-                                       .Request<Application>(HttpMethod.Post, "/app", new {app_id = applicationId})
-                                       .ConfigureAwait(false);
+            .Request<Application>(HttpMethod.Post, "/app", new {app_id = applicationId})
+            .ConfigureAwait(false);
         _authTokenPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Authware",
-                                      applicationId, "authtoken.bin");
+            applicationId, "authtoken.bin");
         if (!Directory.Exists(Path.GetDirectoryName(_authTokenPath)))
             Directory.CreateDirectory(Path.GetDirectoryName(_authTokenPath) ?? string.Empty);
+
+        ApplicationInformation = applicationResponse;
 
         return applicationResponse;
     }
@@ -86,9 +115,9 @@ public class AuthwareApplication
         _ = value ?? throw new ArgumentNullException(value, $"{nameof(value)} can not be null");
 
         var response = await _requester
-                            .Request<UpdatedDataResponse<UserVariable>>(HttpMethod.Post, "/user/variables",
-                                                                        new {key, value})
-                            .ConfigureAwait(false);
+            .Request<UpdatedDataResponse<UserVariable>>(HttpMethod.Post, "/user/variables",
+                new {key, value})
+            .ConfigureAwait(false);
 
         return response;
     }
@@ -118,9 +147,9 @@ public class AuthwareApplication
         _ = newValue ?? throw new ArgumentNullException(newValue, $"{nameof(newValue)} can not be null");
 
         var response = await _requester
-                            .Request<UpdatedDataResponse<UserVariable>>(HttpMethod.Put, "/user/variables",
-                                                                        new {key, value = newValue})
-                            .ConfigureAwait(false);
+            .Request<UpdatedDataResponse<UserVariable>>(HttpMethod.Put, "/user/variables",
+                new {key, value = newValue})
+            .ConfigureAwait(false);
 
         return response;
     }
@@ -146,9 +175,9 @@ public class AuthwareApplication
         _ = key ?? throw new ArgumentNullException(key, $"{nameof(key)} can not be null");
 
         var response = await _requester
-                            .Request<BaseResponse>(HttpMethod.Delete, "/user/variables",
-                                                   new {key})
-                            .ConfigureAwait(false);
+            .Request<BaseResponse>(HttpMethod.Delete, "/user/variables",
+                new {key})
+            .ConfigureAwait(false);
 
         return response;
     }
@@ -176,14 +205,14 @@ public class AuthwareApplication
         if (authenticated)
         {
             var authenticatedVariables = await _requester
-                                              .Request<Variable[]>(HttpMethod.Get, "/app/variables", null)
-                                              .ConfigureAwait(false);
+                .Request<Variable[]>(HttpMethod.Get, "/app/variables", null)
+                .ConfigureAwait(false);
             return authenticatedVariables;
         }
 
         var variables = await _requester
-                             .Request<Variable[]>(HttpMethod.Post, "/app/variables", new {app_id = _applicationId})
-                             .ConfigureAwait(false);
+            .Request<Variable[]>(HttpMethod.Post, "/app/variables", new {app_id = _applicationId})
+            .ConfigureAwait(false);
         return variables;
     }
 
@@ -239,13 +268,13 @@ public class AuthwareApplication
             throw new ArgumentException($"{nameof(token)} is invalid");
 
         var response = await _requester
-                            .Request<BaseResponse>(HttpMethod.Post, "/user/register",
-                                                   new
-                                                   {
-                                                       app_id = _applicationId, username, password,
-                                                       email_address = email, token
-                                                   })
-                            .ConfigureAwait(false);
+            .Request<BaseResponse>(HttpMethod.Post, "/user/register",
+                new
+                {
+                    app_id = _applicationId, username, password,
+                    email_address = email, token
+                })
+            .ConfigureAwait(false);
         return response;
     }
 
@@ -273,8 +302,9 @@ public class AuthwareApplication
         var _ = _applicationId ?? throw new Exception($"{nameof(_applicationId)} can not be null");
         _ = username ?? throw new ArgumentNullException(username, $"{nameof(username)} can not be null");
         _ = password ?? throw new ArgumentNullException(password, $"{nameof(password)} can not be null");
-        _requester.Client.DefaultRequestHeaders.TryAddWithoutValidation("X-Authware-Hardware-ID",
-                                                                        Identifiers.GetIdentifier());
+
+        _requester.Client.DefaultRequestHeaders.TryAddWithoutValidation("X-Authware-Hardware-ID", IdentifierFunction());
+
         if (File.Exists(_authTokenPath))
         {
             var authToken = File.ReadAllText(_authTokenPath);
@@ -293,15 +323,32 @@ public class AuthwareApplication
         }
 
         var authResponse = await _requester
-                                .Request<AuthResponse>(HttpMethod.Post, "/user/auth",
-                                                       new {app_id = _applicationId, username, password})
-                                .ConfigureAwait(false);
+            .Request<AuthResponse>(HttpMethod.Post, "/user/auth",
+                new {app_id = _applicationId, username, password})
+            .ConfigureAwait(false);
         _requester.Client.DefaultRequestHeaders.Authorization =
             new AuthenticationHeaderValue("Bearer", authResponse.AuthToken);
         var profileResponse =
             await _requester.Request<Profile>(HttpMethod.Get, "user/profile", null).ConfigureAwait(false);
         File.WriteAllText(_authTokenPath, authResponse.AuthToken);
         return profileResponse;
+    }
+
+    /// <summary>
+    ///     Gets the currently authenticated users' profile
+    /// </summary>
+    /// <returns>The currently authenticated users' profile, represented as <see cref="Profile" /></returns>
+    /// <exception cref="Exception">
+    ///     This gets thrown if the application ID is null which would be if
+    ///     <see cref="InitializeApplicationAsync" /> hasn't been called
+    /// </exception>
+    /// <exception cref="AuthwareException">
+    ///     Thrown if no user is authenticated
+    /// </exception>
+    public async Task<Profile> GetUserProfileAsync()
+    {
+        var _ = _applicationId ?? throw new Exception($"{nameof(_applicationId)} can not be null");
+        return await _requester.Request<Profile>(HttpMethod.Get, "user/profile", null).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -326,9 +373,9 @@ public class AuthwareApplication
         _ = email ?? throw new ArgumentNullException(email, $"{nameof(email)} can not be null");
 
         var response = await _requester
-                            .Request<BaseResponse>(HttpMethod.Put, "/user/change-email",
-                                                   new {password, new_email_address = email})
-                            .ConfigureAwait(false);
+            .Request<BaseResponse>(HttpMethod.Put, "/user/change-email",
+                new {password, new_email_address = email})
+            .ConfigureAwait(false);
         return response;
     }
 
@@ -355,13 +402,13 @@ public class AuthwareApplication
         _ = newPassword ?? throw new ArgumentNullException(newPassword, $"{nameof(newPassword)} can not be null");
 
         var response = await _requester
-                            .Request<BaseResponse>(HttpMethod.Put, "/user/change-password",
-                                                   new
-                                                   {
-                                                       old_password = currentPassword, password = newPassword,
-                                                       repeat_password = newPassword
-                                                   })
-                            .ConfigureAwait(false);
+            .Request<BaseResponse>(HttpMethod.Put, "/user/change-password",
+                new
+                {
+                    old_password = currentPassword, password = newPassword,
+                    repeat_password = newPassword
+                })
+            .ConfigureAwait(false);
         return response;
     }
 
@@ -391,7 +438,7 @@ public class AuthwareApplication
 
         var apiResponse =
             await _requester.Request<ApiResponse>(HttpMethod.Post, "/api/execute", new {api_id = apiId, parameters})
-                            .ConfigureAwait(false);
+                .ConfigureAwait(false);
         return apiResponse;
     }
 }

@@ -1,7 +1,9 @@
 using System;
 using System.Globalization;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using Authware.Exceptions;
@@ -36,6 +38,7 @@ namespace Authware
             };
             Client.DefaultRequestHeaders.TryAddWithoutValidation("X-Authware-App-Version",
                 Assembly.GetEntryAssembly()?.GetName().Version.ToString());
+            Client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("Authware-DotNet", Assembly.GetAssembly(typeof(AuthwareApplication)).GetName().Version.ToString()));
         }
 
         /// <summary>

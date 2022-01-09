@@ -15,6 +15,11 @@ public static class AuthwareStatic
     private static readonly AuthwareApplication Authware = new();
 
     /// <summary>
+    ///     Stores the information responded by <see cref="InitializeApplicationAsync" /> for easy access
+    /// </summary>
+    public static Application ApplicationInformation => Authware.ApplicationInformation;
+
+    /// <summary>
     ///     Initializes and checks the ID passed in against the Authware API to make sure the application is properly setup and
     ///     enabled
     /// </summary>
@@ -39,9 +44,9 @@ public static class AuthwareStatic
     public static async Task<StaticResponse<Variable[]>> GrabApplicationVariablesAsync(bool authenticated = false)
     {
         var (success, error, variables) = await ExecuteAuthwareInstancedMethod(async () =>
-                                                                                   await Authware
-                                                                                      .GrabApplicationVariablesAsync(
-                                                                                           authenticated));
+            await Authware
+                .GrabApplicationVariablesAsync(
+                    authenticated));
 
         return await HandleResponseAsync(success, error, variables);
     }
@@ -56,12 +61,12 @@ public static class AuthwareStatic
     /// <param name="token">The license/token you want to register the user with</param>
     /// <returns>The base response containing the code and status message</returns>
     public static async Task<StaticResponse<BaseResponse>> RegisterAsync(string username, string password,
-                                                                         string email, string token)
+        string email, string token)
     {
         var (success, error, response) = await ExecuteAuthwareInstancedMethod(async () =>
-                                                                                  await Authware.RegisterAsync(
-                                                                                      username, password, email,
-                                                                                      token));
+            await Authware.RegisterAsync(
+                username, password, email,
+                token));
 
         return await HandleResponseAsync(success, error, response);
     }
@@ -78,8 +83,20 @@ public static class AuthwareStatic
     public static async Task<StaticResponse<Profile>> LoginAsync(string username, string password)
     {
         var (success, error, profile) = await ExecuteAuthwareInstancedMethod(async () =>
-                                                                                 await Authware.LoginAsync(
-                                                                                     username, password));
+            await Authware.LoginAsync(
+                username, password));
+
+        return await HandleResponseAsync(success, error, profile);
+    }
+
+    /// <summary>
+    ///     Gets the currently authenticated users' profile
+    /// </summary>
+    /// <returns>The currently authenticated users' profile, represented as <see cref="Profile" /></returns>
+    public static async Task<StaticResponse<Profile>> GetUserProfileAsync()
+    {
+        var (success, error, profile) = await ExecuteAuthwareInstancedMethod(async () =>
+            await Authware.GetUserProfileAsync());
 
         return await HandleResponseAsync(success, error, profile);
     }
@@ -93,8 +110,8 @@ public static class AuthwareStatic
     public static async Task<StaticResponse<BaseResponse>> ChangeEmailAsync(string password, string email)
     {
         var (success, error, response) = await ExecuteAuthwareInstancedMethod(async () =>
-                                                                                  await Authware.ChangeEmailAsync(
-                                                                                      password, email));
+            await Authware.ChangeEmailAsync(
+                password, email));
 
         return await HandleResponseAsync(success, error, response);
     }
@@ -106,11 +123,11 @@ public static class AuthwareStatic
     /// <param name="newPassword">The password the user wants to change their password to</param>
     /// <returns>A <see cref="BaseResponse" /> containing the code and the message returned from the authware api</returns>
     public static async Task<StaticResponse<BaseResponse>> ChangePasswordAsync(string currentPassword,
-                                                                               string newPassword)
+        string newPassword)
     {
         var (success, error, response) = await ExecuteAuthwareInstancedMethod(async () =>
-                                                                                  await Authware.ChangePasswordAsync(
-                                                                                      currentPassword, newPassword));
+            await Authware.ChangePasswordAsync(
+                currentPassword, newPassword));
 
         return await HandleResponseAsync(success, error, response);
     }
@@ -125,11 +142,11 @@ public static class AuthwareStatic
     ///     will be a status code if the 'Show API responses' setting is off
     /// </returns>
     public static async Task<StaticResponse<ApiResponse>> ExecuteApiAsync(string apiId,
-                                                                          Dictionary<string, object> parameters)
+        Dictionary<string, object> parameters)
     {
         var (success, error, response) = await ExecuteAuthwareInstancedMethod(async () =>
-                                                                                  await Authware.ExecuteApiAsync(
-                                                                                      apiId, parameters));
+            await Authware.ExecuteApiAsync(
+                apiId, parameters));
 
         return await HandleResponseAsync(success, error, response);
     }
@@ -157,9 +174,9 @@ public static class AuthwareStatic
         string key, string value)
     {
         var (success, error, response) = await ExecuteAuthwareInstancedMethod(async () =>
-                                                                                  await Authware
-                                                                                     .CreateUserVariableAsync(
-                                                                                          key, value));
+            await Authware
+                .CreateUserVariableAsync(
+                    key, value));
 
         return await HandleResponseAsync(success, error, response);
     }
@@ -186,9 +203,9 @@ public static class AuthwareStatic
         string key, string newValue)
     {
         var (success, error, response) = await ExecuteAuthwareInstancedMethod(async () =>
-                                                                                  await Authware
-                                                                                     .UpdateUserVariableAsync(
-                                                                                          key, newValue));
+            await Authware
+                .UpdateUserVariableAsync(
+                    key, newValue));
 
         return await HandleResponseAsync(success, error, response);
     }
@@ -211,8 +228,8 @@ public static class AuthwareStatic
     public static async Task<StaticResponse<BaseResponse>> DeleteUserVariableAsync(string key)
     {
         var (success, error, response) = await ExecuteAuthwareInstancedMethod(async () =>
-                                                                                  await Authware
-                                                                                     .DeleteUserVariableAsync(key));
+            await Authware
+                .DeleteUserVariableAsync(key));
 
         return await HandleResponseAsync(success, error, response);
     }
@@ -239,7 +256,7 @@ public static class AuthwareStatic
     /// <typeparam name="TResponse">The type of response that is required</typeparam>
     /// <returns>The <see cref="StaticResponse{T}" /> wrapped for the <see cref="TResponse" /></returns>
     private static async Task<StaticResponse<TResponse>> HandleResponseAsync<TResponse>(bool success,
-                                                                                        BaseResponse errorResponse, TResponse response)
+        BaseResponse errorResponse, TResponse response)
     {
         if (success)
             return new StaticResponse<TResponse>
