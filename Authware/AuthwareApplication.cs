@@ -312,8 +312,7 @@ public class AuthwareApplication
                 new AuthenticationHeaderValue("Bearer", authToken);
             try
             {
-                return
-                    await _requester.Request<Profile>(HttpMethod.Get, "user/profile", null).ConfigureAwait(false);
+                return await GetUserProfileAsync();
             }
             catch
             {
