@@ -98,6 +98,8 @@ public class AuthwareApplication
     /// <param name="value">
     ///     The value of the variable to create
     /// </param>
+    /// <param name="canEdit">
+    /// Should the users be able to edit this variable (This can be used to make readonly variables</param>
     /// <returns>A <see cref="UpdatedDataResponse{T}" /> which contains the newly created variable</returns>
     /// <exception cref="Exception">
     ///     This gets thrown if the application id is null which would be if
@@ -108,7 +110,7 @@ public class AuthwareApplication
     ///     Thrown if the application is disabled or you attempted to create a variable when the application has creating user
     ///     variables disabled
     /// </exception>
-    public async Task<UpdatedDataResponse<UserVariable>> CreateUserVariableAsync(string key, string value)
+    public async Task<UpdatedDataResponse<UserVariable>> CreateUserVariableAsync(string key, string value, bool canEdit = true)
     {
         var _ = _applicationId ?? throw new Exception($"{nameof(_applicationId)} can not be null");
         _ = key ?? throw new ArgumentNullException(key, $"{nameof(key)} can not be null");
@@ -116,7 +118,7 @@ public class AuthwareApplication
 
         var response = await _requester
             .Request<UpdatedDataResponse<UserVariable>>(HttpMethod.Post, "/user/variables",
-                new {key, value})
+                new {key, value, can_user_edit = canEdit})
             .ConfigureAwait(false);
 
         return response;

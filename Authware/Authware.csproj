@@ -27,12 +27,12 @@
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>authware.snk</AssemblyOriginatorKeyFile>
         <PublicSign>true</PublicSign>
-        <PackageReleaseNotes>Fixed Certificate Issues</PackageReleaseNotes>
+        <PackageReleaseNotes>Added the ability to specify whether user created variables should be readonly</PackageReleaseNotes>
         <ApplicationIcon>authware-s.ico</ApplicationIcon>
         <PackageIcon>authware-s.png</PackageIcon>
         <PackageReadmeFile>README.md</PackageReadmeFile>
 	    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-	    <PackageVersion>1.2.1</PackageVersion>
+	    <PackageVersion>1.2.2</PackageVersion>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">

@@ -160,6 +160,8 @@ public static class AuthwareStatic
     /// <param name="value">
     ///     The value of the variable to create
     /// </param>
+    /// <param name="canEdit">
+    /// Should the users be able to edit this variable (This can be used to make readonly variables</param>
     /// <returns>A <see cref="UpdatedDataResponse{T}" /> which contains the newly created variable</returns>
     /// <exception cref="Exception">
     ///     This gets thrown if the application id is null which would be if
@@ -171,12 +173,12 @@ public static class AuthwareStatic
     ///     variables disabled
     /// </exception>
     public static async Task<StaticResponse<UpdatedDataResponse<UserVariable>>> CreateUserVariableAsync(
-        string key, string value)
+        string key, string value, bool canEdit = true)
     {
         var (success, error, response) = await ExecuteAuthwareInstancedMethod(async () =>
             await Authware
                 .CreateUserVariableAsync(
-                    key, value));
+                    key, value, canEdit));
 
         return await HandleResponseAsync(success, error, response);
     }
