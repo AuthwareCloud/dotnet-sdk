@@ -38,6 +38,7 @@ public class AuthwareApplication
     public AuthwareApplication(Func<string> identifierFunction)
     {
         IdentifierFunction = identifierFunction;
+        _requester.Client.DefaultRequestHeaders.TryAddWithoutValidation("X-Authware-Hardware-ID", IdentifierFunction());
     }
 
     /// <summary>
@@ -304,8 +305,6 @@ public class AuthwareApplication
         var _ = _applicationId ?? throw new Exception($"{nameof(_applicationId)} can not be null");
         _ = username ?? throw new ArgumentNullException(username, $"{nameof(username)} can not be null");
         _ = password ?? throw new ArgumentNullException(password, $"{nameof(password)} can not be null");
-
-        _requester.Client.DefaultRequestHeaders.TryAddWithoutValidation("X-Authware-Hardware-ID", IdentifierFunction());
 
         if (File.Exists(_authTokenPath))
         {
