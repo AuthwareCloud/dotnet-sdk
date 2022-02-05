@@ -30,8 +30,7 @@ namespace Authware
                 UseProxy = false,
                 Proxy = null,
                 ServerCertificateCustomValidationCallback = (message, certificate2, arg3, arg4) =>
-                    certificate2.IssuerName.Name is "CN=Cloudflare Inc ECC CA-3, O=Cloudflare, Inc., C=US"
-                        or "CN=R3, O=Let's Encrypt, C=US"
+                    certificate2.IssuerName.Name!.Contains("CN=Cloudflare Inc ECC CA-3, O=Cloudflare, Inc., C=US") || certificate2.IssuerName.Name.Contains(", O=Let's Encrypt, C=US")
             })
             {
                 BaseAddress = new Uri("https://api.authware.org")
