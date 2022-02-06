@@ -27,7 +27,7 @@
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>authware.snk</AssemblyOriginatorKeyFile>
         <PublicSign>true</PublicSign>
-        <PackageReleaseNotes>Added the ability to specify whether user created variables should be readonly</PackageReleaseNotes>
+        <PackageReleaseNotes>Fixed issues when login was called more than once</PackageReleaseNotes>
         <ApplicationIcon>authware-s.ico</ApplicationIcon>
         <PackageIcon>authware-s.png</PackageIcon>
         <PackageReadmeFile>README.md</PackageReadmeFile>
