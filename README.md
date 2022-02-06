@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/AuthwareCloud/AuthwareDotNet/raw/main/authware-s.png" width="75" height="75">
+  <img src="https://raw.githubusercontent.com/AuthwareCloud/dotnet-sdk/master/authware-s.png" width="75" height="75">
   <h1 align="center">AuthwareDotNet</h1>
   <p align="center">Wrapper for Authware in C# (.NET standard 2.0)</p>
    <p align="center">
@@ -24,7 +24,7 @@ Note: Compilation with .NET 5.0+ is required for the instructions noted here.
 1. Clone the repository
 
 ```
-git clone https://github.com/AuthwareCloud/AuthwareDotNet.git && cd AuthwareDotNet
+git clone https://github.com/AuthwareCloud/dotnet-sdk.git && cd dotnet-sdk
 ```
 
 2. Tell `dotnet` to compile the library

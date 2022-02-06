@@ -31,7 +31,12 @@ public class Application
     /// </summary>
     [JsonProperty("date_created")]
     public DateTime Created { get; set; }
-
+    
+    /// <summary>
+    /// Tells you if your application has hwid locking enabled
+    /// </summary>
+    [JsonProperty("is_hwid_checking_enabled")]
+    public bool CheckIdentifier { get; set; }
     /// <summary>
     ///     A list of APIs that is implemented in your application
     /// </summary>

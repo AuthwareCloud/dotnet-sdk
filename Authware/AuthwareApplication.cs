@@ -38,7 +38,6 @@ public class AuthwareApplication
     public AuthwareApplication(Func<string> identifierFunction)
     {
         IdentifierFunction = identifierFunction;
-        _requester.Client.DefaultRequestHeaders.TryAddWithoutValidation("X-Authware-Hardware-ID", IdentifierFunction());
     }
 
     /// <summary>
@@ -71,23 +70,29 @@ public class AuthwareApplication
     /// </exception>
     public async Task<Application> InitializeApplicationAsync(string applicationId)
     {
-        var _ = applicationId ??
-                throw new ArgumentNullException(applicationId, $"{nameof(applicationId)} can not be null");
-        if (!Guid.TryParse(applicationId, out var _))
-            throw new ArgumentException($"{applicationId} is invalid");
+        if (ApplicationInformation is null)
+        {
+            var _ = applicationId ??
+                    throw new ArgumentNullException(applicationId, $"{nameof(applicationId)} can not be null");
+            if (!Guid.TryParse(applicationId, out var _))
+                throw new ArgumentException($"{applicationId} is invalid");
 
-        _applicationId = applicationId;
-        var applicationResponse = await _requester
-            .Request<Application>(HttpMethod.Post, "/app", new {app_id = applicationId})
-            .ConfigureAwait(false);
-        _authTokenPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Authware",
-            applicationId, "authtoken.bin");
-        if (!Directory.Exists(Path.GetDirectoryName(_authTokenPath)))
-            Directory.CreateDirectory(Path.GetDirectoryName(_authTokenPath) ?? string.Empty);
+            _applicationId = applicationId;
+            var applicationResponse = await _requester
+                .Request<Application>(HttpMethod.Post, "/app", new {app_id = applicationId})
+                .ConfigureAwait(false);
+            _authTokenPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Authware",
+                applicationId, "authtoken.bin");
+            if (!Directory.Exists(Path.GetDirectoryName(_authTokenPath)))
+                Directory.CreateDirectory(Path.GetDirectoryName(_authTokenPath) ?? string.Empty);
+            if (applicationResponse.CheckIdentifier)
+                _requester.Client.DefaultRequestHeaders.TryAddWithoutValidation("X-Authware-Hardware-ID",
+                    IdentifierFunction());
 
-        ApplicationInformation = applicationResponse;
+            ApplicationInformation = applicationResponse;
+        }
 
-        return applicationResponse;
+        return ApplicationInformation;
     }
 
     /// <summary>
@@ -100,7 +105,8 @@ public class AuthwareApplication
     ///     The value of the variable to create
     /// </param>
     /// <param name="canEdit">
-    /// Should the users be able to edit this variable (This can be used to make readonly variables</param>
+    ///     Should the users be able to edit this variable (This can be used to make readonly variables
+    /// </param>
     /// <returns>A <see cref="UpdatedDataResponse{T}" /> which contains the newly created variable</returns>
     /// <exception cref="Exception">
     ///     This gets thrown if the application id is null which would be if
@@ -111,7 +117,8 @@ public class AuthwareApplication
     ///     Thrown if the application is disabled or you attempted to create a variable when the application has creating user
     ///     variables disabled
     /// </exception>
-    public async Task<UpdatedDataResponse<UserVariable>> CreateUserVariableAsync(string key, string value, bool canEdit = true)
+    public async Task<UpdatedDataResponse<UserVariable>> CreateUserVariableAsync(string key, string value,
+        bool canEdit = true)
     {
         var _ = _applicationId ?? throw new Exception($"{nameof(_applicationId)} can not be null");
         _ = key ?? throw new ArgumentNullException(key, $"{nameof(key)} can not be null");
@@ -234,8 +241,7 @@ public class AuthwareApplication
         // Try to delete the current auth token, this prevents issues if called when the user is not signed-in.
         if (File.Exists(_authTokenPath)) File.Delete(_authTokenPath);
 
-        // Remove the auth token from the request headers
-        _requester.Client.DefaultRequestHeaders.Remove("Authorization");
+        _requester.Client.DefaultRequestHeaders.Authorization = null;
     }
 
     /// <summary>
@@ -305,7 +311,6 @@ public class AuthwareApplication
         var _ = _applicationId ?? throw new Exception($"{nameof(_applicationId)} can not be null");
         _ = username ?? throw new ArgumentNullException(username, $"{nameof(username)} can not be null");
         _ = password ?? throw new ArgumentNullException(password, $"{nameof(password)} can not be null");
-
         if (File.Exists(_authTokenPath))
         {
             var authToken = File.ReadAllText(_authTokenPath);
@@ -319,6 +324,7 @@ public class AuthwareApplication
             {
                 // ignored will be thrown below if it fails for whatever reason but still lets delete the bad auth token
                 File.Delete(_authTokenPath);
+                _requester.Client.DefaultRequestHeaders.Authorization = null;
             }
         }
 

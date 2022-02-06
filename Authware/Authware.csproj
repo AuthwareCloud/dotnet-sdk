@@ -21,8 +21,8 @@
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
         <Company>Authware Technologies</Company>
         <Product>Authware</Product>
-        <AssemblyVersion>1.1.0</AssemblyVersion>
-        <FileVersion>1.1.0</FileVersion>
+        <AssemblyVersion>1.2.3</AssemblyVersion>
+        <FileVersion>1.2.3</FileVersion>
         <NeutralLanguage>en-US</NeutralLanguage>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>authware.snk</AssemblyOriginatorKeyFile>
@@ -32,7 +32,7 @@
         <PackageIcon>authware-s.png</PackageIcon>
         <PackageReadmeFile>README.md</PackageReadmeFile>
 	    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-	    <PackageVersion>1.2.2</PackageVersion>
+	    <PackageVersion>1.2.3</PackageVersion>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">

@@ -1,39 +1,33 @@
-using System;
 using Newtonsoft.Json;
 
-namespace Authware.Models;
-
-/// <summary>
-///     Represents a variable from either an application or a role
-/// </summary>
-public class Variable
+namespace Authware.Models
 {
     /// <summary>
-    ///     The ID of the variable
+    ///     Represents a variable from either an application or a role
     /// </summary>
-    [JsonProperty("id")]
-    public Guid Id { get; set; }
-
-    /// <summary>
-    ///     The key of the variable
-    /// </summary>
-    [JsonProperty("key")]
-    public string Key { get; set; }
-
-    /// <summary>
-    ///     The value of the variable
-    /// </summary>
-    [JsonProperty("value")]
-    public string Value { get; set; }
-
-    public void Deconstruct(out string key, out string value)
+    public class Variable
     {
-        key = Key;
-        value = Value;
-    }
+        /// <summary>
+        ///     The key of the variable
+        /// </summary>
+        [JsonProperty("key")]
+        public string Key { get; set; }
 
-    public override string ToString()
-    {
-        return $"{Key}: {Value}";
+        /// <summary>
+        ///     The value of the variable
+        /// </summary>
+        [JsonProperty("value")]
+        public string Value { get; set; }
+
+        public void Deconstruct(out string key, out string value)
+        {
+            key = Key;
+            value = Value;
+        }
+
+        public override string ToString()
+        {
+            return $"{Key}: {Value}";
+        }
     }
 }
