@@ -50,8 +50,8 @@ public class Profile
     ///     A list of roles the user possesses
     /// </summary>
 
-    [JsonProperty("roles")]
-    public Role[] Roles { get; set; }
+    [JsonProperty("role")]
+    public Role Role { get; set; }
 
     /// <summary>
     ///     A list of previous API requests that this user has performed
