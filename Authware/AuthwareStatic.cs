@@ -264,7 +264,7 @@ public static class AuthwareStatic
         if (success)
             return new StaticResponse<TResponse>
             {
-                Code = 200,
+                Code = errorResponse.Code,
                 Response = response
             };
         return new StaticResponse<TResponse>
@@ -296,7 +296,7 @@ public static class AuthwareStatic
             return (false, new ErrorResponse
             {
                 Message = e.Message,
-                Code = 400
+                Code = BaseResponse.ResponseStatus.Unidentified
             }, default);
         }
     }

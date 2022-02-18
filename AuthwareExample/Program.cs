@@ -11,6 +11,9 @@ namespace AuthwareExample
         public static async Task Main(string[] args)
         {
             var app = await AuthwareStatic.InitializeApplicationAsync("abc");
+            var register = await AuthwareStatic.RegisterAsync("abc", "abc", "abc",
+                "abc");
+            Console.WriteLine(register.Message);
             var profile = await AuthwareStatic.LoginAsync("abc", "abc");
 
             Console.WriteLine(profile.Response.Email);
