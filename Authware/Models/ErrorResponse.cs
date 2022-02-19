@@ -18,11 +18,12 @@ namespace Authware.Models
         ///     A list of errors that were thrown by the Authware API, these are commonly data validation errors
         /// </summary>
         [JsonProperty("errors")]
-        public List<string> Errors { get; set; }
+        public List<string>? Errors { get; set; }
+        
         /// <summary>
         /// Converts the ErrorResponse to a friendly format for display
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The formatted error response</returns>
         public override string ToString()
         {
             var errors = Errors?.Aggregate(string.Empty, (current, item) => current + $"{item}, ")

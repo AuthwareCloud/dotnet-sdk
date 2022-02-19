@@ -44,26 +44,26 @@ public class Profile
     /// </summary>
 
     [JsonProperty("sessions")]
-    public Session[] Sessions { get; set; }
+    public Session[]? Sessions { get; set; }
 
     /// <summary>
     ///     A list of roles the user possesses
     /// </summary>
 
     [JsonProperty("role")]
-    public Role Role { get; set; }
+    public Role? Role { get; set; }
 
     /// <summary>
     ///     A list of previous API requests that this user has performed
     /// </summary>
     [JsonProperty("requests")]
-    public ApiRequest[] ApiRequests { get; set; }
+    public ApiRequest[]? ApiRequests { get; set; }
 
     /// <summary>
     ///     A list of variables that the user possesses
     /// </summary>
     [JsonProperty("user_variables")]
-    public UserVariable[] UserVariables { get; set; }
+    public UserVariable[]? UserVariables { get; set; }
 
     public override string ToString()
     {

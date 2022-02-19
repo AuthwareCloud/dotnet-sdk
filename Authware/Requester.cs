@@ -1,9 +1,7 @@
 using System;
-using System.Globalization;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using Authware.Exceptions;
@@ -29,15 +27,17 @@ namespace Authware
             {
                 UseProxy = false,
                 Proxy = null,
-                ServerCertificateCustomValidationCallback = (message, certificate2, arg3, arg4) =>
-                    certificate2.IssuerName.Name!.Contains("CN=Cloudflare Inc ECC CA-3, O=Cloudflare, Inc., C=US") || certificate2.IssuerName.Name.Contains(", O=Let's Encrypt, C=US")
+                ServerCertificateCustomValidationCallback = (_, certificate2, _, _) =>
+                    certificate2.IssuerName.Name!.Contains("CN=Cloudflare Inc ECC CA-3, O=Cloudflare, Inc., C=US") ||
+                    certificate2.IssuerName.Name.Contains(", O=Let's Encrypt, C=US")
             })
             {
                 BaseAddress = new Uri("https://api.authware.org")
             };
             Client.DefaultRequestHeaders.TryAddWithoutValidation("X-Authware-App-Version",
                 Assembly.GetEntryAssembly()?.GetName().Version.ToString());
-            Client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("Authware-DotNet", Assembly.GetAssembly(typeof(AuthwareApplication)).GetName().Version.ToString()));
+            Client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("Authware-DotNet",
+                Assembly.GetAssembly(typeof(AuthwareApplication)).GetName().Version.ToString()));
         }
 
         /// <summary>
@@ -73,21 +73,45 @@ namespace Authware
         ///     wrapper.
         ///     It is discouraged to use this to make requests as the exceptions it throws does specify Authware issues
         /// </remarks>
-        public async Task<T> Request<T>(HttpMethod method, string url, object postData)
+        public async Task<T> Request<T>(HttpMethod method, string url, object? postData)
         {
             using var request = new HttpRequestMessage(method, url);
             request.Headers.TryAddWithoutValidation("X-Request-DateTime",
                 DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString());
-            if (postData != null)
+            if (postData is not null)
                 request.Content = new StringContent(JsonConvert.SerializeObject(postData), Encoding.UTF8,
                     "application/json");
 
             using var response = await Client.SendAsync(request).ConfigureAwait(false);
             var content = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode) return JsonConvert.DeserializeObject<T>(content);
 
             try
             {
+                if (response.IsSuccessStatusCode)
+                    return JsonConvert.DeserializeObject<T>(content)!;
+            }
+            catch (JsonReaderException e)
+            {
+                throw new Exception("There was an error when parsing the response from the authware api. \n" +
+                                "The code returned from the api was a success status code. \n" +
+                                "Api responses most likely changed and you need to update the the wrapper to fix this error. \n" +
+                                "The response from the api was. \n" +
+                                $"{content} \n", e);
+            }
+
+            try
+            {
+                if ((int)response.StatusCode == 429)
+                {
+                    var retryAfter = response.Headers.RetryAfter.Delta!.Value;
+                    if (content.Contains("<"))
+                    {
+                        throw new RateLimitException(null, retryAfter);
+                    }
+
+                    throw new RateLimitException(JsonConvert.DeserializeObject<ErrorResponse>(content), retryAfter);
+                }
+
                 var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(content);
                 throw new AuthwareException(errorResponse);
             }

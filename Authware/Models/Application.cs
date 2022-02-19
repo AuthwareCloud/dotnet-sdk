@@ -41,7 +41,7 @@ public class Application
     ///     A list of APIs that is implemented in your application
     /// </summary>
     [JsonProperty("apis")]
-    public Api[] Apis { get; set; }
+    public Api[]? Apis { get; set; }
 
     public override string ToString()
     {

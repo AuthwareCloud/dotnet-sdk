@@ -11,11 +11,11 @@ namespace AuthwareExample
         public static async Task Main(string[] args)
         {
             var app = await AuthwareStatic.InitializeApplicationAsync("abc");
+
             var register = await AuthwareStatic.RegisterAsync("abc", "abc", "abc",
                 "abc");
             Console.WriteLine(register.Message);
-            var profile = await AuthwareStatic.LoginAsync("abc", "abc");
-
+            var profile = await AuthwareStatic.LoginAsync("Toshi", "");
             Console.WriteLine(profile.Response.Email);
             Console.WriteLine(profile.Response.Username);
             Console.WriteLine(profile.Response.PlanExpire);
@@ -24,7 +24,7 @@ namespace AuthwareExample
                 Console.WriteLine($"Key: {key} | Value: {value}");
 
             var api = await AuthwareStatic.ExecuteApiAsync("abc",
-                                                           new Dictionary<string,object>()); 
+                new Dictionary<string, object>());
             Console.WriteLine(api.Response.DecodedResponse);
         }
     }

@@ -17,7 +17,7 @@ public static class AuthwareStatic
     /// <summary>
     ///     Stores the information responded by <see cref="InitializeApplicationAsync" /> for easy access
     /// </summary>
-    public static Application ApplicationInformation => Authware.ApplicationInformation;
+    public static Application? ApplicationInformation => Authware.ApplicationInformation;
 
     /// <summary>
     ///     Initializes and checks the ID passed in against the Authware API to make sure the application is properly setup and
@@ -254,23 +254,23 @@ public static class AuthwareStatic
     ///     Prepares and returns a response that works with <see cref="StaticResponse{T}" />
     /// </summary>
     /// <param name="success">If the response was successful</param>
-    /// <param name="errorResponse">The error response from the API, this can be null</param>
+    /// <param name="baseResponse">The error response from the API, this can be null</param>
     /// <param name="response">The <see cref="TResponse" /> from the API</param>
     /// <typeparam name="TResponse">The type of response that is required</typeparam>
     /// <returns>The <see cref="StaticResponse{T}" /> wrapped for the <see cref="TResponse" /></returns>
     private static StaticResponse<TResponse> HandleResponse<TResponse>(bool success,
-        BaseResponse errorResponse, TResponse response)
+        BaseResponse? baseResponse, TResponse? response)
     {
         if (success)
             return new StaticResponse<TResponse>
             {
-                Code = errorResponse.Code,
-                Response = response
+                Code = BaseResponse.ResponseStatus.Success,
+                Response = response!
             };
         return new StaticResponse<TResponse>
         {
-            Code = errorResponse.Code,
-            Message = errorResponse.ToString()
+            Code = baseResponse!.Code,
+            Message = baseResponse.ToString()
         };
     }
 
@@ -280,7 +280,7 @@ public static class AuthwareStatic
     /// <param name="func">The <see cref="Task" /> based <see cref="Func{TResult}" /> to execute</param>
     /// <typeparam name="TResponse">The type of response required</typeparam>
     /// <returns>The parsed response as a success bool, error response and <see cref="TResponse" /></returns>
-    private static async Task<(bool, ErrorResponse, TResponse)> ExecuteAuthwareInstancedMethod<TResponse>(
+    private static async Task<(bool, ErrorResponse?, TResponse?)> ExecuteAuthwareInstancedMethod<TResponse>(
         Func<Task<TResponse>> func)
     {
         try

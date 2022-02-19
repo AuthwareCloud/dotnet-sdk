@@ -59,7 +59,7 @@ public class ApiResponse
     }
 
     /// <summary>
-    ///     Whether the response is going to be a actual response served by the API or a status code, due to the configuration
+    ///     Whether the response is going to be an actual response served by the API or a status code, due to the configuration
     ///     of your API.
     /// </summary>
     public bool CanReturnResponse

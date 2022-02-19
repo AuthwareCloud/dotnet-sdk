@@ -24,7 +24,7 @@ namespace Authware.Models
         ///     The variables that the role possesses
         /// </summary>
         [JsonProperty("variables")]
-        public Variable[] Variables { get; set; }
+        public Variable[]? Variables { get; set; }
 
         public override string ToString()
         {

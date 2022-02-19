@@ -33,6 +33,7 @@
         <PackageReadmeFile>README.md</PackageReadmeFile>
 	    <PackageLicenseExpression>MIT</PackageLicenseExpression>
 	    <PackageVersion>1.2.4</PackageVersion>
+	    <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">

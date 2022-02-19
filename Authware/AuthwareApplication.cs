@@ -16,19 +16,29 @@ namespace Authware;
 public class AuthwareApplication
 {
     /// <summary>
+    ///     The function for getting a users hardware ID, this is optional, and if not set will be
+    /// </summary>
+    private Func<string> IdentifierFunction { get; } = Identifiers.GetIdentifier;
+
+    /// <summary>
     ///     This is used to facilitate HTTP requests for this class
     /// </summary>
     private readonly Requester _requester = new();
+    
+    /// <summary>
+    ///     Stores the information responded by <see cref="InitializeApplicationAsync" /> for easy access
+    /// </summary>
+    public Application? ApplicationInformation { get; private set; }
 
     /// <summary>
     ///     The ID of the current application
     /// </summary>
-    private string _applicationId;
+    private string? _applicationId;
 
     /// <summary>
     ///     The path that the current users' authentication token is located
     /// </summary>
-    private string _authTokenPath;
+    private string? _authTokenPath;
 
     /// <summary>
     ///     Constructs the application with a custom hardware ID system, this allows you to define what you want to use to get
@@ -46,17 +56,6 @@ public class AuthwareApplication
     public AuthwareApplication()
     {
     }
-
-    /// <summary>
-    ///     Stores the information responded by <see cref="InitializeApplicationAsync" /> for easy access
-    /// </summary>
-    public Application ApplicationInformation { get; private set; }
-
-    /// <summary>
-    ///     The function for getting a users hardware ID, this is optional, and if not set will be
-    /// </summary>
-    private Func<string> IdentifierFunction { get; } = Identifiers.GetIdentifier;
-
     /// <summary>
     ///     Initializes and checks the ID passed in against the Authware API to make sure the application is properly setup and
     ///     enabled
@@ -119,8 +118,8 @@ public class AuthwareApplication
     /// </exception>
     public async Task<UpdatedDataResponse<UserVariable>> CreateUserVariableAsync(string key, string value,
         bool canEdit = true)
-    {
-        var _ = _applicationId ?? throw new Exception($"{nameof(_applicationId)} can not be null");
+    { 
+        _ = _applicationId ?? throw new Exception($"{nameof(_applicationId)} can not be null");
         _ = key ?? throw new ArgumentNullException(key, $"{nameof(key)} can not be null");
         _ = value ?? throw new ArgumentNullException(value, $"{nameof(value)} can not be null");
 
@@ -151,8 +150,8 @@ public class AuthwareApplication
     ///     Thrown if the application is disabled or you attempted to modify a variable when you do not have permission to
     /// </exception>
     public async Task<UpdatedDataResponse<UserVariable>> UpdateUserVariableAsync(string key, string newValue)
-    {
-        var _ = _applicationId ?? throw new Exception($"{nameof(_applicationId)} can not be null");
+    { 
+        _ = _applicationId ?? throw new Exception($"{nameof(_applicationId)} can not be null");
         _ = key ?? throw new ArgumentNullException(key, $"{nameof(key)} can not be null");
         _ = newValue ?? throw new ArgumentNullException(newValue, $"{nameof(newValue)} can not be null");
 
@@ -180,8 +179,8 @@ public class AuthwareApplication
     ///     Thrown if the application is disabled or you attempted to modify a variable when you do not have permission to
     /// </exception>
     public async Task<BaseResponse> DeleteUserVariableAsync(string key)
-    {
-        var _ = _applicationId ?? throw new Exception($"{nameof(_applicationId)} can not be null");
+    { 
+        _ = _applicationId ?? throw new Exception($"{nameof(_applicationId)} can not be null");
         _ = key ?? throw new ArgumentNullException(key, $"{nameof(key)} can not be null");
 
         var response = await _requester
@@ -236,10 +235,10 @@ public class AuthwareApplication
     /// </exception>
     public void Logout()
     {
-        var _ = _applicationId ?? throw new Exception($"{nameof(_applicationId)} can not be null");
+        _ = _applicationId ?? throw new Exception($"{nameof(_applicationId)} can not be null");
 
         // Try to delete the current auth token, this prevents issues if called when the user is not signed-in.
-        if (File.Exists(_authTokenPath)) File.Delete(_authTokenPath);
+        if (File.Exists(_authTokenPath)) File.Delete(_authTokenPath!);
 
         _requester.Client.DefaultRequestHeaders.Authorization = null;
     }
@@ -268,7 +267,7 @@ public class AuthwareApplication
     /// </exception>
     public async Task<BaseResponse> RegisterAsync(string username, string password, string email, string token)
     {
-        var _ = _applicationId ?? throw new Exception($"{nameof(_applicationId)} can not be null");
+        _ = _applicationId ?? throw new Exception($"{nameof(_applicationId)} can not be null");
         _ = username ?? throw new ArgumentNullException(username, $"{nameof(username)} can not be null");
         _ = password ?? throw new ArgumentNullException(password, $"{nameof(password)} can not be null");
         _ = email ?? throw new ArgumentNullException(email, $"{nameof(email)} can not be null");
@@ -308,12 +307,12 @@ public class AuthwareApplication
     /// </exception>
     public async Task<Profile> LoginAsync(string username, string password)
     {
-        var _ = _applicationId ?? throw new Exception($"{nameof(_applicationId)} can not be null");
+        _ = _applicationId ?? throw new Exception($"{nameof(_applicationId)} can not be null");
         _ = username ?? throw new ArgumentNullException(username, $"{nameof(username)} can not be null");
         _ = password ?? throw new ArgumentNullException(password, $"{nameof(password)} can not be null");
         if (File.Exists(_authTokenPath))
         {
-            var authToken = File.ReadAllText(_authTokenPath);
+            var authToken = File.ReadAllText(_authTokenPath!);
             _requester.Client.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", authToken);
             try
@@ -323,7 +322,7 @@ public class AuthwareApplication
             catch
             {
                 // ignored will be thrown below if it fails for whatever reason but still lets delete the bad auth token
-                File.Delete(_authTokenPath);
+                File.Delete(_authTokenPath!);
                 _requester.Client.DefaultRequestHeaders.Authorization = null;
             }
         }
@@ -336,7 +335,7 @@ public class AuthwareApplication
             new AuthenticationHeaderValue("Bearer", authResponse.AuthToken);
         var profileResponse =
             await _requester.Request<Profile>(HttpMethod.Get, "user/profile", null).ConfigureAwait(false);
-        File.WriteAllText(_authTokenPath, authResponse.AuthToken);
+        File.WriteAllText(_authTokenPath!, authResponse.AuthToken);
         return profileResponse;
     }
 
@@ -374,7 +373,7 @@ public class AuthwareApplication
     /// </exception>
     public async Task<BaseResponse> ChangeEmailAsync(string password, string email)
     {
-        var _ = _applicationId ?? throw new Exception($"{nameof(_applicationId)} can not be null");
+        _ = _applicationId ?? throw new Exception($"{nameof(_applicationId)} can not be null");
         _ = password ?? throw new ArgumentNullException(password, $"{nameof(password)} can not be null");
         _ = email ?? throw new ArgumentNullException(email, $"{nameof(email)} can not be null");
 
@@ -402,7 +401,7 @@ public class AuthwareApplication
     /// </exception>
     public async Task<BaseResponse> ChangePasswordAsync(string currentPassword, string newPassword)
     {
-        var _ = _applicationId ?? throw new Exception($"{nameof(_applicationId)} can not be null");
+        _ = _applicationId ?? throw new Exception($"{nameof(_applicationId)} can not be null");
         _ = currentPassword ??
             throw new ArgumentNullException(currentPassword, $"{nameof(currentPassword)} can not be null");
         _ = newPassword ?? throw new ArgumentNullException(newPassword, $"{nameof(newPassword)} can not be null");
@@ -439,7 +438,7 @@ public class AuthwareApplication
     /// </exception>
     public async Task<ApiResponse> ExecuteApiAsync(string apiId, Dictionary<string, object> parameters)
     {
-        var _ = _applicationId ?? throw new Exception($"{nameof(_applicationId)} can not be null");
+        _ = _applicationId ?? throw new Exception($"{nameof(_applicationId)} can not be null");
         _ = apiId ?? throw new ArgumentNullException(apiId, $"{nameof(apiId)} can not be null");
 
         var apiResponse =

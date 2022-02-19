@@ -22,7 +22,7 @@ internal static class Identifiers
         if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             if (Debugger.IsAttached)
                 throw new PlatformNotSupportedException(
-                    $"The default hardware ID system is not supported on {RuntimeInformation.OSDescription}, if you want to add support for the current platform, you can set-up your own hardware ID system through the AuthwareApplication constructor using a Func that returns a string.");
+                    $"The default hardware ID system is not supported on {RuntimeInformation.OSDescription}, if you want to add support for the current platform, you can setup your own hardware ID system through the AuthwareApplication constructor using a Func that returns a string.");
             else
                 throw new PlatformNotSupportedException(
                     $"The default hardware ID system is not supported on {RuntimeInformation.OSDescription}.");

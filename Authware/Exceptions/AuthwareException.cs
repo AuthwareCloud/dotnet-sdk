@@ -11,9 +11,12 @@ namespace Authware.Exceptions
         /// <summary>
         ///     The deserialized response from the API, this contains the error information.
         /// </summary>
-        public readonly ErrorResponse ErrorResponse;
-
-        public AuthwareException(ErrorResponse errorResponse) : base(errorResponse.Message)
+        public readonly ErrorResponse? ErrorResponse;
+        /// <summary>
+        /// Constructs a new instance of an authware exception
+        /// </summary>
+        /// <param name="errorResponse"></param>
+        public AuthwareException(ErrorResponse? errorResponse) : base(errorResponse?.Message)
         {
             ErrorResponse = errorResponse;
         }

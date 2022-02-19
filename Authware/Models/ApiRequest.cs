@@ -25,7 +25,7 @@ public class ApiRequest
     ///     The parameters the user sent, this does not include parameters that already have a value set in your application
     /// </summary>
     [JsonProperty("parameters")]
-    public Dictionary<string, string> Parameters { get; set; }
+    public Dictionary<string, string>? Parameters { get; set; }
 
     /// <summary>
     ///     The date the request was sent
