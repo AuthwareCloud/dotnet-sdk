@@ -27,12 +27,12 @@
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>authware.snk</AssemblyOriginatorKeyFile>
         <PublicSign>true</PublicSign>
-        <PackageReleaseNotes>Authware json model updated</PackageReleaseNotes>
+        <PackageReleaseNotes>Added new ratelimit responses to the wrapper</PackageReleaseNotes>
         <ApplicationIcon>authware-s.ico</ApplicationIcon>
         <PackageIcon>authware-s.png</PackageIcon>
         <PackageReadmeFile>README.md</PackageReadmeFile>
 	    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-	    <PackageVersion>1.2.4</PackageVersion>
+	    <PackageVersion>1.2.5</PackageVersion>
 	    <Nullable>enable</Nullable>
     </PropertyGroup>
 
