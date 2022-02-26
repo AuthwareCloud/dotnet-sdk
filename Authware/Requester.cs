@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reflection;
@@ -113,6 +114,11 @@ namespace Authware
                 }
 
                 var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(content);
+                if (errorResponse?.Code == BaseResponse.ResponseStatus.UpdateRequired)
+                {
+                    throw new UpdateRequiredException(response.Headers.GetValues("X-Authware-Updater-URL").First(),
+                        errorResponse);
+                }
                 throw new AuthwareException(errorResponse);
             }
             catch (NullReferenceException e)

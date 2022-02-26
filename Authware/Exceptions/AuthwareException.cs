@@ -15,7 +15,7 @@ namespace Authware.Exceptions
         /// <summary>
         /// Constructs a new instance of an authware exception
         /// </summary>
-        /// <param name="errorResponse"></param>
+        /// <param name="errorResponse">The error response we want to give the user</param>
         public AuthwareException(ErrorResponse? errorResponse) : base(errorResponse?.Message)
         {
             ErrorResponse = errorResponse;

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Authware.Exceptions;
 using Authware.Models;
@@ -287,6 +289,11 @@ public static class AuthwareStatic
         {
             return (true, null, await func());
         }
+        catch (UpdateRequiredException e)
+        {
+            OpenBrowser(e.UpdateUrl);
+            return (false, e.ErrorResponse, default);
+        }
         catch (AuthwareException e)
         {
             return (false, e.ErrorResponse, default);
@@ -298,6 +305,21 @@ public static class AuthwareStatic
                 Message = e.Message,
                 Code = BaseResponse.ResponseStatus.Unidentified
             }, default);
+        }
+    }
+    private static void OpenBrowser(string url)
+    {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            Process.Start(new ProcessStartInfo(url) { UseShellExecute = true }); // Works ok on windows
+        }
+        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            Process.Start("xdg-open", url);  // Works ok on linux
+        }
+        else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        {
+            Process.Start("open", url); // Not tested
         }
     }
 }

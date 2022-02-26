@@ -10,12 +10,12 @@ namespace AuthwareExample
     {
         public static async Task Main(string[] args)
         {
-            var app = await AuthwareStatic.InitializeApplicationAsync("abc");
+            var app = await AuthwareStatic.InitializeApplicationAsync("33dff4b8-9bf1-4361-bed7-761fb63f0dac");
 
             var register = await AuthwareStatic.RegisterAsync("abc", "abc", "abc",
                 "abc");
             Console.WriteLine(register.Message);
-            var profile = await AuthwareStatic.LoginAsync("Toshi", "");
+            var profile = await AuthwareStatic.LoginAsync("Toshi", "JJjRPXFUbb4cTvVYiLfR");
             Console.WriteLine(profile.Response.Email);
             Console.WriteLine(profile.Response.Username);
             Console.WriteLine(profile.Response.PlanExpire);
