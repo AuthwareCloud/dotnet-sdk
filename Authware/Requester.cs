@@ -16,7 +16,7 @@ namespace Authware
         /// <summary>
         ///     This is the <see cref="HttpClient" /> the <see cref="Requester" /> uses to make HTTP Requests
         /// </summary>
-        public readonly HttpClient Client;
+        internal readonly HttpClient Client;
 
         /// <summary>
         ///     This is for internal use,
@@ -74,7 +74,7 @@ namespace Authware
         ///     wrapper.
         ///     It is discouraged to use this to make requests as the exceptions it throws does specify Authware issues
         /// </remarks>
-        public async Task<T> Request<T>(HttpMethod method, string url, object? postData)
+        internal async Task<T> Request<T>(HttpMethod method, string url, object? postData)
         {
             using var request = new HttpRequestMessage(method, url);
             request.Headers.TryAddWithoutValidation("X-Request-DateTime",

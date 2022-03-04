@@ -40,21 +40,23 @@ public class AuthwareApplication
     /// </summary>
     private string? _authTokenPath;
 
+    private readonly bool _cacheSession;
     /// <summary>
     ///     Constructs the application with a custom hardware ID system, this allows you to define what you want to use to get
     ///     a users' hardware ID. This can also allow you to enable hardware ID checking on non-Windows systems.
     /// </summary>
     /// <param name="identifierFunction">The function to fetch a hardware ID for a user</param>
-    public AuthwareApplication(Func<string> identifierFunction)
+    public AuthwareApplication(Func<string> identifierFunction, bool cacheSession = true)
     {
         IdentifierFunction = identifierFunction;
+        _cacheSession = cacheSession;
     }
-
     /// <summary>
     ///     Constructs the application class instance with default values
     /// </summary>
-    public AuthwareApplication()
+    public AuthwareApplication(bool cacheSession = true)
     {
+        _cacheSession = cacheSession;
     }
     /// <summary>
     ///     Initializes and checks the ID passed in against the Authware API to make sure the application is properly setup and
@@ -238,7 +240,8 @@ public class AuthwareApplication
         _ = _applicationId ?? throw new Exception($"{nameof(_applicationId)} can not be null");
 
         // Try to delete the current auth token, this prevents issues if called when the user is not signed-in.
-        if (File.Exists(_authTokenPath)) File.Delete(_authTokenPath!);
+        if (File.Exists(_authTokenPath))
+                File.Delete(_authTokenPath!);
 
         _requester.Client.DefaultRequestHeaders.Authorization = null;
     }
@@ -310,7 +313,7 @@ public class AuthwareApplication
         _ = _applicationId ?? throw new Exception($"{nameof(_applicationId)} can not be null");
         _ = username ?? throw new ArgumentNullException(username, $"{nameof(username)} can not be null");
         _ = password ?? throw new ArgumentNullException(password, $"{nameof(password)} can not be null");
-        if (File.Exists(_authTokenPath))
+        if (_cacheSession && File.Exists(_authTokenPath))
         {
             var authToken = File.ReadAllText(_authTokenPath!);
             _requester.Client.DefaultRequestHeaders.Authorization =
@@ -329,13 +332,17 @@ public class AuthwareApplication
 
         var authResponse = await _requester
             .Request<AuthResponse>(HttpMethod.Post, "/user/auth",
-                new {app_id = _applicationId, username, password})
+                new { app_id = _applicationId, username, password })
             .ConfigureAwait(false);
         _requester.Client.DefaultRequestHeaders.Authorization =
             new AuthenticationHeaderValue("Bearer", authResponse.AuthToken);
         var profileResponse =
             await _requester.Request<Profile>(HttpMethod.Get, "user/profile", null).ConfigureAwait(false);
-        File.WriteAllText(_authTokenPath!, authResponse.AuthToken);
+        if (_cacheSession)
+        {
+            File.WriteAllText(_authTokenPath!, authResponse.AuthToken);
+        }
+
         return profileResponse;
     }
 
