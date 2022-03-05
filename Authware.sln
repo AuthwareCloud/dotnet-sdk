@@ -2,8 +2,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authware", "Authware\Authware.csproj", "{439BFF90-668E-477F-A3A9-05599C299E51}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthwareExample", "AuthwareExample\AuthwareExample.csproj", "{1E3AE4E4-8B7A-41B8-BC8B-77ADF361697C}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
