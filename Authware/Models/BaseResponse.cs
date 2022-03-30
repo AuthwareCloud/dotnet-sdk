@@ -9,32 +9,6 @@ namespace Authware.Models;
 public class BaseResponse
 {
     /// <summary>
-    ///     The HTTP status code of the response
-    /// </summary>
-    [JsonProperty("code")]
-    public ResponseStatus Code { get; set; }
-
-    /// <summary>
-    ///     The message from the Authware API
-    /// </summary>
-    [JsonProperty("message")]
-    public string? Message { get; set; }
-
-    /// <summary>
-    ///     Auto property that defines whether a request was successful based on the response code
-    /// </summary>
-    public bool Success => Code == ResponseStatus.Success;
-
-    /// <summary>
-    /// Formats the response to a proper string you can print out
-    /// </summary>
-    /// <returns>The formatted string</returns>
-    public override string ToString()
-    {
-        return $"{Message} ({Code})";
-    }
-
-    /// <summary>
     ///     Contains every error code that can be thrown by the API as an enum
     /// </summary>
     public enum ResponseStatus : ushort
@@ -174,5 +148,31 @@ public class BaseResponse
         ///     The error thrown is not able to be identified by this error scheme
         /// </summary>
         Unidentified = ushort.MaxValue
+    }
+
+    /// <summary>
+    ///     The HTTP status code of the response
+    /// </summary>
+    [JsonProperty("code")]
+    public ResponseStatus Code { get; set; }
+
+    /// <summary>
+    ///     The message from the Authware API
+    /// </summary>
+    [JsonProperty("message")]
+    public string? Message { get; set; }
+
+    /// <summary>
+    ///     Auto property that defines whether a request was successful based on the response code
+    /// </summary>
+    public bool Success => Code == ResponseStatus.Success;
+
+    /// <summary>
+    ///     Formats the response to a proper string you can print out
+    /// </summary>
+    /// <returns>The formatted string</returns>
+    public override string ToString()
+    {
+        return $"{Message} ({Code})";
     }
 }
