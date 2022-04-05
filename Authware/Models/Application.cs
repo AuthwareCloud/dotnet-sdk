@@ -43,7 +43,19 @@ public class Application
     /// </summary>
     [JsonProperty("apis")]
     public Api[]? Apis { get; set; }
-
+    
+    /// <summary>
+    ///     The amount of users on your application
+    /// </summary>
+    [JsonProperty("user_count")] 
+    public int? UserCount { get; set; }
+    
+    /// <summary>
+    ///     The amount of requests on your application
+    /// </summary>
+    [JsonProperty("request_count")] 
+    public int? RequestCount { get; set; }
+    
     public override string ToString()
     {
         return $"{Name} (v{Version})";
