@@ -83,7 +83,7 @@ public class AuthwareApplication
     public async Task<Application> InitializeApplicationAsync(string applicationId)
     {
         if (ApplicationInformation is not null) return ApplicationInformation;
-        
+
         var _ = applicationId ??
                 throw new ArgumentNullException(applicationId, $"{nameof(applicationId)} can not be null");
         if (!Guid.TryParse(applicationId, out var _))
@@ -351,6 +351,36 @@ public class AuthwareApplication
         if (_cacheSession) File.WriteAllText(_authTokenPath!, authResponse.AuthToken);
 
         return profileResponse;
+    }
+
+    /// <summary>
+    ///     Redeems a registration token to a user, this is for when a user expires and purchases a new token
+    /// </summary>
+    /// <param name="username">The username you want to redeem the token to</param>
+    /// <param name="token">The token you want to redeem</param>
+    /// <returns>A base response containing details about the redemption</returns>
+    /// <exception cref="Exception">
+    ///     This gets thrown if the application ID is null which would be if
+    ///     <see cref="InitializeApplicationAsync" /> hasn't been called
+    /// </exception>
+    /// <exception cref="ArgumentNullException">If the username or token is null this exception is thrown</exception>
+    /// <exception cref="AuthwareException">
+    ///     Thrown if the data provided is not acceptable by the Authware API, the hardware ID did not match (if
+    ///     enabled), the
+    ///     application version is out-of-date (if enabled) or the username and password are invalid
+    /// </exception>
+    public async Task<BaseResponse> RedeemTokenAsync(string username, string token)
+    {
+        _ = _applicationId ?? throw new Exception($"{nameof(_applicationId)} can not be null");
+        _ = username ?? throw new ArgumentNullException(username, $"{nameof(username)} can not be null");
+        _ = token ?? throw new ArgumentNullException(token, $"{nameof(token)} can not be null");
+
+        var response = await _requester
+            .Request<BaseResponse>(HttpMethod.Post, "/user/renew",
+                new {app_id = _applicationId, username, token})
+            .ConfigureAwait(false);
+
+        return response;
     }
 
     /// <summary>
