@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authware", "Authware\Authwa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthwareExample", "AuthwareExample\AuthwareExample.csproj", "{1E3AE4E4-8B7A-41B8-BC8B-77ADF361697C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authware.Tests", "Authware.Tests\Authware.Tests.csproj", "{0ACB3A7A-5FE1-4735-B57B-C93974301AB7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{1E3AE4E4-8B7A-41B8-BC8B-77ADF361697C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1E3AE4E4-8B7A-41B8-BC8B-77ADF361697C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1E3AE4E4-8B7A-41B8-BC8B-77ADF361697C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0ACB3A7A-5FE1-4735-B57B-C93974301AB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0ACB3A7A-5FE1-4735-B57B-C93974301AB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0ACB3A7A-5FE1-4735-B57B-C93974301AB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0ACB3A7A-5FE1-4735-B57B-C93974301AB7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
