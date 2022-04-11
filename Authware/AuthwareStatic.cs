@@ -154,6 +154,31 @@ public static class AuthwareStatic
     }
 
     /// <summary>
+    ///     Redeems a registration token to a user, this is for when a user expires and purchases a new token
+    /// </summary>
+    /// <param name="username">The username you want to redeem the token to</param>
+    /// <param name="token">The token you want to redeem</param>
+    /// <returns>A base response containing details about the redemption</returns>
+    /// <exception cref="Exception">
+    ///     This gets thrown if the application ID is null which would be if
+    ///     <see cref="InitializeApplicationAsync" /> hasn't been called
+    /// </exception>
+    /// <exception cref="ArgumentNullException">If the username or token is null this exception is thrown</exception>
+    /// <exception cref="AuthwareException">
+    ///     Thrown if the data provided is not acceptable by the Authware API, the hardware ID did not match (if
+    ///     enabled), the
+    ///     application version is out-of-date (if enabled) or the username and password are invalid
+    /// </exception>
+    public static async Task<BaseResponse> RedeemTokenAsync(string username, string token)
+    {
+        var (success, error, response) = await ExecuteAuthwareInstancedMethod(async () =>
+            await Authware.RedeemTokenAsync(
+                username, token));
+
+        return HandleResponse(success, error, response);
+    }
+
+    /// <summary>
     ///     Creates a new user variable with the specified key and value
     /// </summary>
     /// <param name="key">
@@ -307,19 +332,13 @@ public static class AuthwareStatic
             }, default);
         }
     }
+
     private static void OpenBrowser(string url)
     {
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-        {
-            Process.Start(new ProcessStartInfo(url) { UseShellExecute = true }); // Works ok on windows
-        }
+            Process.Start(new ProcessStartInfo(url) {UseShellExecute = true}); // Works ok on windows
         else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-        {
-            Process.Start("xdg-open", url);  // Works ok on linux
-        }
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-        {
-            Process.Start("open", url); // Not tested
-        }
+            Process.Start("xdg-open", url); // Works ok on linux
+        else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) Process.Start("open", url); // Not tested
     }
 }

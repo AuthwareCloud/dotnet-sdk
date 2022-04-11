@@ -15,20 +15,12 @@ namespace Authware;
 /// </summary>
 public class AuthwareApplication
 {
-    /// <summary>
-    ///     The function for getting a users hardware ID, this is optional, and if not set will be
-    /// </summary>
-    private Func<string> IdentifierFunction { get; } = Identifiers.GetIdentifier;
+    private readonly bool _cacheSession;
 
     /// <summary>
     ///     This is used to facilitate HTTP requests for this class
     /// </summary>
     private readonly Requester _requester = new();
-    
-    /// <summary>
-    ///     Stores the information responded by <see cref="InitializeApplicationAsync" /> for easy access
-    /// </summary>
-    public Application? ApplicationInformation { get; private set; }
 
     /// <summary>
     ///     The ID of the current application
@@ -40,24 +32,43 @@ public class AuthwareApplication
     /// </summary>
     private string? _authTokenPath;
 
-    private readonly bool _cacheSession;
     /// <summary>
     ///     Constructs the application with a custom hardware ID system, this allows you to define what you want to use to get
     ///     a users' hardware ID. This can also allow you to enable hardware ID checking on non-Windows systems.
     /// </summary>
     /// <param name="identifierFunction">The function to fetch a hardware ID for a user</param>
+    /// <param name="cacheSession">
+    ///     Whether user session tokens should automatically be securely cached by the built-in cache
+    ///     system
+    /// </param>
     public AuthwareApplication(Func<string> identifierFunction, bool cacheSession = true)
     {
         IdentifierFunction = identifierFunction;
         _cacheSession = cacheSession;
     }
+
     /// <summary>
     ///     Constructs the application class instance with default values
     /// </summary>
+    /// <param name="cacheSession">
+    ///     Whether user session tokens should automatically be securely cached by the built-in cache
+    ///     system
+    /// </param>
     public AuthwareApplication(bool cacheSession = true)
     {
         _cacheSession = cacheSession;
     }
+
+    /// <summary>
+    ///     The function for getting a users hardware ID, this is optional, and if not set will be
+    /// </summary>
+    private Func<string> IdentifierFunction { get; } = Identifiers.GetIdentifier;
+
+    /// <summary>
+    ///     Stores the information responded by <see cref="InitializeApplicationAsync" /> for easy access
+    /// </summary>
+    public Application? ApplicationInformation { get; private set; }
+
     /// <summary>
     ///     Initializes and checks the ID passed in against the Authware API to make sure the application is properly setup and
     ///     enabled
@@ -71,27 +82,26 @@ public class AuthwareApplication
     /// </exception>
     public async Task<Application> InitializeApplicationAsync(string applicationId)
     {
-        if (ApplicationInformation is null)
-        {
-            var _ = applicationId ??
-                    throw new ArgumentNullException(applicationId, $"{nameof(applicationId)} can not be null");
-            if (!Guid.TryParse(applicationId, out var _))
-                throw new ArgumentException($"{applicationId} is invalid");
+        if (ApplicationInformation is not null) return ApplicationInformation;
 
-            _applicationId = applicationId;
-            var applicationResponse = await _requester
-                .Request<Application>(HttpMethod.Post, "/app", new {app_id = applicationId})
-                .ConfigureAwait(false);
-            _authTokenPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Authware",
-                applicationId, "authtoken.bin");
-            if (!Directory.Exists(Path.GetDirectoryName(_authTokenPath)))
-                Directory.CreateDirectory(Path.GetDirectoryName(_authTokenPath) ?? string.Empty);
-            if (applicationResponse.CheckIdentifier)
-                _requester.Client.DefaultRequestHeaders.TryAddWithoutValidation("X-Authware-Hardware-ID",
-                    IdentifierFunction());
+        var _ = applicationId ??
+                throw new ArgumentNullException(applicationId, $"{nameof(applicationId)} can not be null");
+        if (!Guid.TryParse(applicationId, out var _))
+            throw new ArgumentException($"{applicationId} is invalid");
 
-            ApplicationInformation = applicationResponse;
-        }
+        _applicationId = applicationId;
+        var applicationResponse = await _requester
+            .Request<Application>(HttpMethod.Post, "/app", new {app_id = applicationId})
+            .ConfigureAwait(false);
+        _authTokenPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Authware",
+            applicationId, "authtoken.bin");
+        if (!Directory.Exists(Path.GetDirectoryName(_authTokenPath)))
+            Directory.CreateDirectory(Path.GetDirectoryName(_authTokenPath) ?? string.Empty);
+        if (applicationResponse.CheckIdentifier)
+            _requester.Client.DefaultRequestHeaders.TryAddWithoutValidation("X-Authware-Hardware-ID",
+                IdentifierFunction());
+
+        ApplicationInformation = applicationResponse;
 
         return ApplicationInformation;
     }
@@ -120,7 +130,7 @@ public class AuthwareApplication
     /// </exception>
     public async Task<UpdatedDataResponse<UserVariable>> CreateUserVariableAsync(string key, string value,
         bool canEdit = true)
-    { 
+    {
         _ = _applicationId ?? throw new Exception($"{nameof(_applicationId)} can not be null");
         _ = key ?? throw new ArgumentNullException(key, $"{nameof(key)} can not be null");
         _ = value ?? throw new ArgumentNullException(value, $"{nameof(value)} can not be null");
@@ -152,7 +162,7 @@ public class AuthwareApplication
     ///     Thrown if the application is disabled or you attempted to modify a variable when you do not have permission to
     /// </exception>
     public async Task<UpdatedDataResponse<UserVariable>> UpdateUserVariableAsync(string key, string newValue)
-    { 
+    {
         _ = _applicationId ?? throw new Exception($"{nameof(_applicationId)} can not be null");
         _ = key ?? throw new ArgumentNullException(key, $"{nameof(key)} can not be null");
         _ = newValue ?? throw new ArgumentNullException(newValue, $"{nameof(newValue)} can not be null");
@@ -181,7 +191,7 @@ public class AuthwareApplication
     ///     Thrown if the application is disabled or you attempted to modify a variable when you do not have permission to
     /// </exception>
     public async Task<BaseResponse> DeleteUserVariableAsync(string key)
-    { 
+    {
         _ = _applicationId ?? throw new Exception($"{nameof(_applicationId)} can not be null");
         _ = key ?? throw new ArgumentNullException(key, $"{nameof(key)} can not be null");
 
@@ -241,7 +251,7 @@ public class AuthwareApplication
 
         // Try to delete the current auth token, this prevents issues if called when the user is not signed-in.
         if (File.Exists(_authTokenPath))
-                File.Delete(_authTokenPath!);
+            File.Delete(_authTokenPath!);
 
         _requester.Client.DefaultRequestHeaders.Authorization = null;
     }
@@ -332,18 +342,45 @@ public class AuthwareApplication
 
         var authResponse = await _requester
             .Request<AuthResponse>(HttpMethod.Post, "/user/auth",
-                new { app_id = _applicationId, username, password })
+                new {app_id = _applicationId, username, password})
             .ConfigureAwait(false);
         _requester.Client.DefaultRequestHeaders.Authorization =
             new AuthenticationHeaderValue("Bearer", authResponse.AuthToken);
         var profileResponse =
             await _requester.Request<Profile>(HttpMethod.Get, "user/profile", null).ConfigureAwait(false);
-        if (_cacheSession)
-        {
-            File.WriteAllText(_authTokenPath!, authResponse.AuthToken);
-        }
+        if (_cacheSession) File.WriteAllText(_authTokenPath!, authResponse.AuthToken);
 
         return profileResponse;
+    }
+
+    /// <summary>
+    ///     Redeems a registration token to a user, this is for when a user expires and purchases a new token
+    /// </summary>
+    /// <param name="username">The username you want to redeem the token to</param>
+    /// <param name="token">The token you want to redeem</param>
+    /// <returns>A base response containing details about the redemption</returns>
+    /// <exception cref="Exception">
+    ///     This gets thrown if the application ID is null which would be if
+    ///     <see cref="InitializeApplicationAsync" /> hasn't been called
+    /// </exception>
+    /// <exception cref="ArgumentNullException">If the username or token is null this exception is thrown</exception>
+    /// <exception cref="AuthwareException">
+    ///     Thrown if the data provided is not acceptable by the Authware API, the hardware ID did not match (if
+    ///     enabled), the
+    ///     application version is out-of-date (if enabled) or the username and password are invalid
+    /// </exception>
+    public async Task<BaseResponse> RedeemTokenAsync(string username, string token)
+    {
+        _ = _applicationId ?? throw new Exception($"{nameof(_applicationId)} can not be null");
+        _ = username ?? throw new ArgumentNullException(username, $"{nameof(username)} can not be null");
+        _ = token ?? throw new ArgumentNullException(token, $"{nameof(token)} can not be null");
+
+        var response = await _requester
+            .Request<BaseResponse>(HttpMethod.Post, "/user/renew",
+                new {app_id = _applicationId, username, token})
+            .ConfigureAwait(false);
+
+        return response;
     }
 
     /// <summary>

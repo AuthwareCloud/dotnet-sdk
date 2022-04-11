@@ -32,6 +32,10 @@
         <WarningLevel>4</WarningLevel>
     </PropertyGroup>
     <ItemGroup>
+        <Reference Include="Authware, Version=1.2.3.0, Culture=neutral, PublicKeyToken=de1e4f740470857b">
+          <HintPath>packages\Authware.1.2.6\lib\netstandard2.0\Authware.dll</HintPath>
+          <Private>True</Private>
+        </Reference>
         <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed">
             <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
             <Private>True</Private>
@@ -52,12 +56,6 @@
     </ItemGroup>
     <ItemGroup>
         <None Include="packages.config" />
-    </ItemGroup>
-    <ItemGroup>
-      <ProjectReference Include="..\Authware\Authware.csproj">
-        <Project>{439bff90-668e-477f-a3a9-05599c299e51}</Project>
-        <Name>Authware</Name>
-      </ProjectReference>
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
     <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

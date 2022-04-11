@@ -5,12 +5,12 @@ namespace Authware.Models;
 /// <summary>
 ///     Represents a <see cref="BaseResponse" /> but includes new or modified data for your application to update with
 /// </summary>
-/// <typeparam name="T">The new or updated data</typeparam>
-public class UpdatedDataResponse<T> : BaseResponse
+/// <typeparam name="TData">The new or updated data</typeparam>
+public class UpdatedDataResponse<TData> : BaseResponse
 {
     /// <summary>
     ///     The new or modified data
     /// </summary>
     [JsonProperty("new_data")]
-    public T NewData { get; set; }
+    public TData NewData { get; set; }
 }

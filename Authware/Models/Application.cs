@@ -31,18 +31,31 @@ public class Application
     /// </summary>
     [JsonProperty("date_created")]
     public DateTime Created { get; set; }
-    
+
     /// <summary>
-    /// Tells you if your application has hwid locking enabled
+    ///     Tells you if your application has hwid locking enabled
     /// </summary>
     [JsonProperty("is_hwid_checking_enabled")]
     public bool CheckIdentifier { get; set; }
+
     /// <summary>
     ///     A list of APIs that is implemented in your application
     /// </summary>
     [JsonProperty("apis")]
     public Api[]? Apis { get; set; }
-
+    
+    /// <summary>
+    ///     The amount of users on your application
+    /// </summary>
+    [JsonProperty("user_count")] 
+    public int? UserCount { get; set; }
+    
+    /// <summary>
+    ///     The amount of requests on your application
+    /// </summary>
+    [JsonProperty("request_count")] 
+    public int? RequestCount { get; set; }
+    
     public override string ToString()
     {
         return $"{Name} (v{Version})";

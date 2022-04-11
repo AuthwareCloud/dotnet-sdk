@@ -11,11 +11,11 @@
         <Authors>Authware Technologies</Authors>
         <Description>Authware wrapper for .NET (netstandard2.0)</Description>
         <Copyright>Copyright 2022 (C) Authware Technologies</Copyright>
-		<PackageDescription>Authware wrapper for .NET (netstandard2.0)</PackageDescription>
-		<Summary>Authware wrapper for .NET (netstandard2.0)</Summary>
-        <PackageProjectUrl>https://github.com/AuthwareCloud/AuthwareDotNet</PackageProjectUrl>
-        <PackageIconUrl>https://raw.githubusercontent.com/AuthwareCloud/AuthwareDotNet/main/authware-s.png</PackageIconUrl>
-        <RepositoryUrl>https://github.com/AuthwareCloud/AuthwareDotNet</RepositoryUrl>
+        <PackageDescription>Authware wrapper for .NET (netstandard2.0)</PackageDescription>
+        <Summary>Authware wrapper for .NET (netstandard2.0)</Summary>
+        <PackageProjectUrl>https://github.com/AuthwareCloud/dotnet-sdk</PackageProjectUrl>
+        <PackageIconUrl>https://raw.githubusercontent.com/AuthwareCloud/dotnet-sdk/main/authware-s.png</PackageIconUrl>
+        <RepositoryUrl>https://github.com/AuthwareCloud/dotnet-sdk</RepositoryUrl>
         <RepositoryType>GitHub</RepositoryType>
         <PackageTags>authentication; netstandard; auth; jwt; security; cloud;</PackageTags>
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
@@ -27,13 +27,13 @@
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>authware.snk</AssemblyOriginatorKeyFile>
         <PublicSign>true</PublicSign>
-        <PackageReleaseNotes>Added new ratelimit responses to the wrapper</PackageReleaseNotes>
+        <PackageReleaseNotes>Add the ability to turn off session storage</PackageReleaseNotes>
         <ApplicationIcon>authware-s.ico</ApplicationIcon>
         <PackageIcon>authware-s.png</PackageIcon>
         <PackageReadmeFile>README.md</PackageReadmeFile>
-	    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-	    <PackageVersion>1.2.5</PackageVersion>
-	    <Nullable>enable</Nullable>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageVersion>1.2.6</PackageVersion>
+        <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
@@ -41,18 +41,18 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Content Include="authware-s.ico" />
+        <EmbeddedResource Include="authware-s.ico" />
     </ItemGroup>
 
     <ItemGroup>
-      <None Include="..\authware-s.png">
-        <Pack>True</Pack>
-        <PackagePath>\</PackagePath>
-      </None>
-      <None Include="..\README.md">
-        <Pack>True</Pack>
-        <PackagePath>\</PackagePath>
-      </None>
+        <None Include="..\authware-s.png">
+            <Pack>True</Pack>
+            <PackagePath>\</PackagePath>
+        </None>
+        <None Include="..\README.md">
+            <Pack>True</Pack>
+            <PackagePath>\</PackagePath>
+        </None>
     </ItemGroup>
 
     <ItemGroup>
