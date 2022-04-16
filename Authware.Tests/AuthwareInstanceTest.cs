@@ -21,6 +21,30 @@ public class AuthwareInstanceTest
         var applicationInfo = await app.InitializeApplicationAsync(_applicationGuid);
         Assert.IsNotNull(applicationInfo);
     }
+
+    [Test]
+    public async Task Register_NoException()
+    {
+        var app = new AuthwareApplication();
+        var applicationInfo = await app.InitializeApplicationAsync(_applicationGuid);
+        Assert.IsNotNull(applicationInfo);
+
+        var response =
+            await app.RegisterAsync("Test", "Test.Password.Do.Not.Use.This1", "test@example.com", "ad00a70a-49ee-44cc-9b31-4d3e38823236");
+        Assert.IsTrue(response.Success);
+    }
+
+    [Test]
+    public async Task CheckLogin_NoException()
+    {
+        var app = new AuthwareApplication();
+        var applicationInfo = await app.InitializeApplicationAsync(_applicationGuid);
+        Assert.IsNotNull(applicationInfo);
+
+        var profile = await app.LoginAsync("Test", "Test.Password.Do.Not.Use.This1");
+        Assert.IsNotNull(profile?.Username);
+    }
+    
     
     [Test]
     public void InitializeApplication_ThrowAuthwareException()

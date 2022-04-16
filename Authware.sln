@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authware", "Authware\Authware.csproj", "{439BFF90-668E-477F-A3A9-05599C299E51}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authware.Tests", "Authware.Tests\Authware.Tests.csproj", "{080C6A77-09B4-4793-A64C-9BCEF56C8876}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -16,5 +18,9 @@ Global
 		{1E3AE4E4-8B7A-41B8-BC8B-77ADF361697C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1E3AE4E4-8B7A-41B8-BC8B-77ADF361697C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1E3AE4E4-8B7A-41B8-BC8B-77ADF361697C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{080C6A77-09B4-4793-A64C-9BCEF56C8876}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{080C6A77-09B4-4793-A64C-9BCEF56C8876}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{080C6A77-09B4-4793-A64C-9BCEF56C8876}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{080C6A77-09B4-4793-A64C-9BCEF56C8876}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

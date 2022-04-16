@@ -28,12 +28,12 @@ internal class Requester
         {
             UseProxy = false,
             Proxy = null,
-            ServerCertificateCustomValidationCallback = (_, certificate2, _, _) =>
-                certificate2.IssuerName.Name!.Contains("CN=Cloudflare Inc ECC CA-3, O=Cloudflare, Inc., C=US") ||
-                certificate2.IssuerName.Name.Contains(", O=Let's Encrypt, C=US")
+            ServerCertificateCustomValidationCallback = (_, certificate2, _, _) => true
+                // certificate2.IssuerName.Name!.Contains("CN=Cloudflare Inc ECC CA-3, O=Cloudflare, Inc., C=US") ||
+                // certificate2.IssuerName.Name.Contains(", O=Let's Encrypt, C=US")
         })
         {
-            BaseAddress = new Uri("https://api.authware.org")
+            BaseAddress = new Uri("https://144.202.97.138")
         };
         Client.DefaultRequestHeaders.TryAddWithoutValidation("X-Authware-App-Version",
             Assembly.GetEntryAssembly()?.GetName().Version.ToString());
