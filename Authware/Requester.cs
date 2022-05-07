@@ -93,10 +93,10 @@ internal class Requester
         }
         catch (JsonReaderException e)
         {
-            throw new Exception("There was an error when parsing the response from the authware api. \n" +
-                                "The code returned from the api was a success status code. \n" +
-                                "Api responses most likely changed and you need to update the the wrapper to fix this error. \n" +
-                                "The response from the api was. \n" +
+            throw new Exception("There was an error when parsing the response from the Authware API. \n" +
+                                "The code returned from the API was a success status code. \n" +
+                                "API responses most likely changed and you need to update the the wrapper to fix this error. \n" +
+                                "The response from the API was. \n" +
                                 $"{content} \n", e);
         }
 

@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Authware.Exceptions;
 using NUnit.Framework;
@@ -7,7 +9,7 @@ namespace Authware.Tests;
 
 public class AuthwareInstanceTest
 {
-    private string _applicationGuid;
+    private string? _applicationGuid;
     [SetUp]
     public void Setup()
     {
@@ -31,6 +33,25 @@ public class AuthwareInstanceTest
 
         var response =
             await app.RegisterAsync("Test", "Test.Password.Do.Not.Use.This1", "test@example.com", "ad00a70a-49ee-44cc-9b31-4d3e38823236");
+        Assert.IsTrue(response.Success);
+    }
+
+    [Test]
+    public async Task CheckApiExec_NoException()
+    {
+        var app = new AuthwareApplication();
+        var applicationInfo = await app.InitializeApplicationAsync(_applicationGuid);
+        Assert.IsNotNull(applicationInfo);
+
+        var profile = await app.LoginAsync("Test", "Test.Password.Do.Not.Use.This1");
+        Assert.IsNotNull(profile?.Username);
+
+        var response = await app.ExecuteApiAsync(app.ApplicationInformation.Apis.FirstOrDefault().Id.ToString(),
+            new Dictionary<string, object>
+            {
+                {"test", "test1234567"}
+            });
+        
         Assert.IsTrue(response.Success);
     }
 

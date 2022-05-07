@@ -27,7 +27,7 @@ public static class AuthwareStatic
     /// </summary>
     /// <param name="applicationId">The ID of your application, this can be fetched on the manage application page</param>
     /// <returns>The application name, version and creation date represented by a <see cref="Application" /></returns>
-    public static async Task<StaticResponse<Application>> InitializeApplicationAsync(string applicationId)
+    public static async Task<StaticResponse<Application>> InitializeApplicationAsync(string? applicationId)
     {
         var (success, error, application) = await ExecuteAuthwareInstancedMethod(async () =>
             await Authware.InitializeApplicationAsync(applicationId));

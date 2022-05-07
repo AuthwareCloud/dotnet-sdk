@@ -80,7 +80,7 @@ public class AuthwareApplication
     /// <exception cref="AuthwareException">
     ///     Thrown if the application does not exist under the provided ID
     /// </exception>
-    public async Task<Application> InitializeApplicationAsync(string applicationId)
+    public async Task<Application> InitializeApplicationAsync(string? applicationId)
     {
         if (ApplicationInformation is not null) return ApplicationInformation;
 
