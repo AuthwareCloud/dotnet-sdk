@@ -27,12 +27,12 @@
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>authware.snk</AssemblyOriginatorKeyFile>
         <PublicSign>true</PublicSign>
-        <PackageReleaseNotes>Add the ability to turn off session storage</PackageReleaseNotes>
+        <PackageReleaseNotes>Fixed plan expiry property</PackageReleaseNotes>
         <ApplicationIcon>authware-s.ico</ApplicationIcon>
         <PackageIcon>authware-s.png</PackageIcon>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <PackageVersion>1.2.6</PackageVersion>
+        <PackageVersion>1.2.7</PackageVersion>
         <Nullable>enable</Nullable>
     </PropertyGroup>
 

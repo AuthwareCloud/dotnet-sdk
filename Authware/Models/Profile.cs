@@ -36,8 +36,8 @@ public class Profile
     /// <summary>
     ///     The date the users access will expire
     /// </summary>
-    [JsonProperty("plan_expire")]
-    public DateTime PlanExpire { get; set; }
+    [JsonProperty("expiration")]
+    public DateTime Expiration { get; set; }
 
     /// <summary>
     ///     A list of active sessions that the may user possesses
