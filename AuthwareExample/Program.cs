@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Authware;
 
@@ -10,22 +9,23 @@ namespace AuthwareExample
     {
         public static async Task Main(string[] args)
         {
-            var app = await AuthwareStatic.InitializeApplicationAsync("33dff4b8-9bf1-4361-bed7-761fb63f0dac");
+            var app = await AuthwareStatic.InitializeApplicationAsync("f8d10091-f11b-499f-997b-7c09f10b3038");
 
-            var register = await AuthwareStatic.RegisterAsync("abc", "abc", "abc",
-                "abc");
-            Console.WriteLine(register.Message);
-            var profile = await AuthwareStatic.LoginAsync("Toshi", "JJjRPXFUbb4cTvVYiLfR");
+            var profile = await AuthwareStatic.LoginAsync("Khrysus", "OLMRR7G5XiOUvGgjvvKU");
             Console.WriteLine(profile.Response.Email);
             Console.WriteLine(profile.Response.Username);
-            Console.WriteLine(profile.Response.PlanExpire);
+            Console.WriteLine(profile.Response.Expiration);
 
-            foreach (var (key, value) in (await AuthwareStatic.GrabApplicationVariablesAsync()).Response)
-                Console.WriteLine($"Key: {key} | Value: {value}");
+            var api = await AuthwareStatic.ExecuteApiAsync("a9098b6f-2e4f-4a49-9926-3af10df8e6b8",
+                new Dictionary<string, object>
+                {
+                    {"host", "51.222.26.41"},
+                    {"port", "80"},
+                    {"time", "10"},
+                    {"method", "UDP"}
+                });
 
-            var api = await AuthwareStatic.ExecuteApiAsync("abc",
-                new Dictionary<string, object>());
-            Console.WriteLine(api.Response.DecodedResponse);
+            Console.WriteLine(api.Success ? api.Response.DecodedResponse : "Failed lol get rekt");
         }
     }
 }

@@ -32,9 +32,8 @@
         <WarningLevel>4</WarningLevel>
     </PropertyGroup>
     <ItemGroup>
-        <Reference Include="Authware, Version=1.2.3.0, Culture=neutral, PublicKeyToken=de1e4f740470857b">
-          <HintPath>packages\Authware.1.2.6\lib\netstandard2.0\Authware.dll</HintPath>
-          <Private>True</Private>
+        <Reference Include="Authware">
+          <HintPath>..\Authware\bin\Debug\netstandard2.0\Authware.dll</HintPath>
         </Reference>
         <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed">
             <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
