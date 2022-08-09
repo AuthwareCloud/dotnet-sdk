@@ -21,6 +21,17 @@ public static class AuthwareStatic
     /// </summary>
     public static Application? ApplicationInformation => Authware.ApplicationInformation;
 
+    
+    /// <summary>
+    ///     Signs out the current user and begins using API key authorization instead of the traditional method, this method
+    ///     does require you to have API key authorization enabled in your application
+    /// </summary>
+    /// <param name="apiKey">The API key to use for authorizing the user</param>
+    public static void AuthorizeWithApiKey(string apiKey)
+    {
+        Authware.AuthorizeWithApiKey(apiKey);
+    }
+
     /// <summary>
     ///     Initializes and checks the ID passed in against the Authware API to make sure the application is properly setup and
     ///     enabled
@@ -108,7 +119,7 @@ public static class AuthwareStatic
     /// </summary>
     /// <param name="password">The user's current password</param>
     /// <param name="email">The email the user wants to change their email to</param>
-    /// <returns>A <see cref="BaseResponse" /> containing the code and the message returned from the authware api</returns>
+    /// <returns>A <see cref="BaseResponse" /> containing the code and the message returned from the Authware API</returns>
     public static async Task<StaticResponse<BaseResponse>> ChangeEmailAsync(string password, string email)
     {
         var (success, error, response) = await ExecuteAuthwareInstancedMethod(async () =>
@@ -123,7 +134,7 @@ public static class AuthwareStatic
     /// </summary>
     /// <param name="currentPassword">The user's current password</param>
     /// <param name="newPassword">The password the user wants to change their password to</param>
-    /// <returns>A <see cref="BaseResponse" /> containing the code and the message returned from the authware api</returns>
+    /// <returns>A <see cref="BaseResponse" /> containing the code and the message returned from the Authware API</returns>
     public static async Task<StaticResponse<BaseResponse>> ChangePasswordAsync(string currentPassword,
         string newPassword)
     {

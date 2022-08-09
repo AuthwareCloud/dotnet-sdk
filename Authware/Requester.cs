@@ -28,9 +28,9 @@ internal class Requester
         {
             UseProxy = false,
             Proxy = null,
-            ServerCertificateCustomValidationCallback = (_, certificate2, _, _) => true
-            // certificate2.IssuerName.Name!.Contains("CN=Cloudflare Inc ECC CA-3, O=Cloudflare, Inc., C=US") ||
-            // certificate2.IssuerName.Name.Contains(", O=Let's Encrypt, C=US")
+            ServerCertificateCustomValidationCallback = (_, certificate2, _, _) =>
+                certificate2.IssuerName.Name!.Contains("CN=Cloudflare Inc ECC CA-3, O=Cloudflare, Inc., C=US") ||
+                certificate2.IssuerName.Name.Contains(", O=Let's Encrypt, C=US")
         })
         {
 #if DEBUG
@@ -106,7 +106,7 @@ internal class Requester
 
         try
         {
-            if ((int) response.StatusCode == 429)
+            if ((int)response.StatusCode == 429)
             {
                 var retryAfter = response.Headers.RetryAfter.Delta!.Value;
                 if (content.Contains("<")) throw new RateLimitException(null, retryAfter);

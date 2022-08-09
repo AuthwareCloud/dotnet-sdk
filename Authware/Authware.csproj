@@ -21,18 +21,18 @@
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
         <Company>Authware Technologies</Company>
         <Product>Authware</Product>
-        <AssemblyVersion>1.2.3</AssemblyVersion>
-        <FileVersion>1.2.3</FileVersion>
+        <AssemblyVersion>1.2.8</AssemblyVersion>
+        <FileVersion>1.2.8</FileVersion>
         <NeutralLanguage>en-US</NeutralLanguage>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>authware.snk</AssemblyOriginatorKeyFile>
         <PublicSign>true</PublicSign>
-        <PackageReleaseNotes>Fixed plan expiry property</PackageReleaseNotes>
+        <PackageReleaseNotes>Implemented new features (API keys)</PackageReleaseNotes>
         <ApplicationIcon>authware-s.ico</ApplicationIcon>
         <PackageIcon>authware-s.png</PackageIcon>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <PackageVersion>1.2.7</PackageVersion>
+        <PackageVersion>1.2.8</PackageVersion>
         <Nullable>enable</Nullable>
     </PropertyGroup>
 

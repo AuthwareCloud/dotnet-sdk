@@ -65,6 +65,13 @@ public class Profile
     [JsonProperty("user_variables")]
     public UserVariable[]? UserVariables { get; set; }
 
+    /// <summary>
+    ///     The users API key, this can be used to authorize as the user with API key authorization, see the
+    ///     <see cref="AuthwareApplication.AuthorizeWithApiKey" /> method.
+    /// </summary>
+    [JsonProperty("api_key")]
+    public string ApiKey { get; set; }
+
     public override string ToString()
     {
         return $"{Username} ({Id})";

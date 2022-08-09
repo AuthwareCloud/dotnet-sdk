@@ -70,6 +70,17 @@ public class AuthwareApplication
     public Application? ApplicationInformation { get; private set; }
 
     /// <summary>
+    ///     Signs out the current user and begins using API key authorization instead of the traditional method, this method
+    ///     does require you to have API key authorization enabled in your application
+    /// </summary>
+    /// <param name="apiKey">The API key to use for authorizing the user</param>
+    public void AuthorizeWithApiKey(string apiKey)
+    {
+        _requester.Client.DefaultRequestHeaders.Remove("Authorization");
+        _requester.Client.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", apiKey);
+    }
+
+    /// <summary>
     ///     Initializes and checks the ID passed in against the Authware API to make sure the application is properly setup and
     ///     enabled
     /// </summary>
@@ -91,7 +102,7 @@ public class AuthwareApplication
 
         _applicationId = applicationId;
         var applicationResponse = await _requester
-            .Request<Application>(HttpMethod.Post, "/app", new {app_id = applicationId})
+            .Request<Application>(HttpMethod.Post, "/app", new { app_id = applicationId })
             .ConfigureAwait(false);
         _authTokenPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Authware",
             applicationId, "authtoken.bin");
@@ -137,7 +148,7 @@ public class AuthwareApplication
 
         var response = await _requester
             .Request<UpdatedDataResponse<UserVariable>>(HttpMethod.Post, "/user/variables",
-                new {key, value, can_user_edit = canEdit})
+                new { key, value, can_user_edit = canEdit })
             .ConfigureAwait(false);
 
         return response;
@@ -169,7 +180,7 @@ public class AuthwareApplication
 
         var response = await _requester
             .Request<UpdatedDataResponse<UserVariable>>(HttpMethod.Put, "/user/variables",
-                new {key, value = newValue})
+                new { key, value = newValue })
             .ConfigureAwait(false);
 
         return response;
@@ -197,7 +208,7 @@ public class AuthwareApplication
 
         var response = await _requester
             .Request<BaseResponse>(HttpMethod.Delete, "/user/variables",
-                new {key})
+                new { key })
             .ConfigureAwait(false);
 
         return response;
@@ -232,7 +243,7 @@ public class AuthwareApplication
         }
 
         var variables = await _requester
-            .Request<Variable[]>(HttpMethod.Post, "/app/variables", new {app_id = _applicationId})
+            .Request<Variable[]>(HttpMethod.Post, "/app/variables", new { app_id = _applicationId })
             .ConfigureAwait(false);
         return variables;
     }
@@ -342,7 +353,7 @@ public class AuthwareApplication
 
         var authResponse = await _requester
             .Request<AuthResponse>(HttpMethod.Post, "/user/auth",
-                new {app_id = _applicationId, username, password})
+                new { app_id = _applicationId, username, password })
             .ConfigureAwait(false);
         _requester.Client.DefaultRequestHeaders.Authorization =
             new AuthenticationHeaderValue("Bearer", authResponse.AuthToken);
@@ -352,7 +363,7 @@ public class AuthwareApplication
 
         return profileResponse;
     }
-
+    
     /// <summary>
     ///     Redeems a registration token to a user, this is for when a user expires and purchases a new token
     /// </summary>
@@ -377,7 +388,7 @@ public class AuthwareApplication
 
         var response = await _requester
             .Request<BaseResponse>(HttpMethod.Post, "/user/renew",
-                new {app_id = _applicationId, username, token})
+                new { app_id = _applicationId, username, token })
             .ConfigureAwait(false);
 
         return response;
@@ -405,7 +416,7 @@ public class AuthwareApplication
     /// </summary>
     /// <param name="password">The user's current password</param>
     /// <param name="email">The email the user wants to change their email to</param>
-    /// <returns>A <see cref="BaseResponse" /> containing the code and the message returned from the authware api</returns>
+    /// <returns>A <see cref="BaseResponse" /> containing the code and the message returned from the Authware API</returns>
     /// <exception cref="Exception">
     ///     This gets thrown if the application id is null which would be if
     ///     <see cref="InitializeApplicationAsync" /> hasn't been called
@@ -423,7 +434,7 @@ public class AuthwareApplication
 
         var response = await _requester
             .Request<BaseResponse>(HttpMethod.Put, "/user/change-email",
-                new {password, new_email_address = email})
+                new { password, new_email_address = email })
             .ConfigureAwait(false);
         return response;
     }
@@ -433,7 +444,7 @@ public class AuthwareApplication
     /// </summary>
     /// <param name="currentPassword">The user's current password</param>
     /// <param name="newPassword">The password the user wants to change their password to</param>
-    /// <returns>A <see cref="BaseResponse" /> containing the code and the message returned from the authware api</returns>
+    /// <returns>A <see cref="BaseResponse" /> containing the code and the message returned from the Authware API</returns>
     /// <exception cref="Exception">
     ///     This gets thrown if the application id is null which would be if
     ///     <see cref="InitializeApplicationAsync" /> hasn't been called
@@ -486,8 +497,33 @@ public class AuthwareApplication
         _ = apiId ?? throw new ArgumentNullException(apiId, $"{nameof(apiId)} can not be null");
 
         var apiResponse =
-            await _requester.Request<ApiResponse>(HttpMethod.Post, "/api/execute", new {api_id = apiId, parameters})
+            await _requester.Request<ApiResponse>(HttpMethod.Post, "/api/execute", new { api_id = apiId, parameters })
                 .ConfigureAwait(false);
         return apiResponse;
+    }
+
+    /// <summary>
+    ///     Allows a user to regenerate their API key depending on whether the functionality is enabled in your application
+    /// </summary>
+    /// <param name="password">The user's current password</param>
+    /// <returns>A <see cref="BaseResponse" /> containing the code and the message returned from the Authware API</returns>
+    /// <exception cref="Exception">
+    ///     This gets thrown if the application id is null which would be if
+    ///     <see cref="InitializeApplicationAsync" /> hasn't been called
+    /// </exception>
+    /// <exception cref="ArgumentNullException">Throws if the password is null</exception>
+    /// <exception cref="AuthwareException">
+    ///     Thrown if the data provided is not acceptable by the Authware API, the hardware ID did not match (if enabled), the
+    ///     application version is out-of-date (if enabled) or the password is invalid
+    /// </exception>
+    public async Task<BaseResponse> RegenerateApiKeyAsync(string password)
+    {
+        _ = _applicationId ?? throw new Exception($"{nameof(_applicationId)} can not be null");
+        _ = password ?? throw new ArgumentNullException(password, $"{nameof(password)} can not be null");
+
+        var response = await _requester.Request<BaseResponse>(HttpMethod.Put, "/user/regenerate-key", new { password })
+            .ConfigureAwait(false);
+
+        return response;
     }
 }

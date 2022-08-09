@@ -1,7 +1,7 @@
 <p align="center">
   <img src="https://raw.githubusercontent.com/AuthwareCloud/dotnet-sdk/master/authware-s.png" width="75" height="75">
   <h1 align="center">Authware .NET SDK</h1>
-  <p align="center">Wrapper for Authware in C# (.NET standard 2.0)</p>
+  <p align="center">Wrapper for Authware written in C# for the .NET ecosystem (.NET standard 2.0)</p>
    <p align="center">
   <a href="https://docs.authware.org">View our documentation</a>
   </p>

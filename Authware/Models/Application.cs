@@ -33,7 +33,7 @@ public class Application
     public DateTime Created { get; set; }
 
     /// <summary>
-    ///     Tells you if your application has hwid locking enabled
+    ///     Tells you if your application has hardware ID locking enabled
     /// </summary>
     [JsonProperty("is_hwid_checking_enabled")]
     public bool CheckIdentifier { get; set; }
