@@ -274,6 +274,28 @@ public static class AuthwareStatic
 
         return HandleResponse(success, error, response);
     }
+    
+    /// <summary>
+    ///     Allows a user to regenerate their API key depending on whether the functionality is enabled in your application
+    /// </summary>
+    /// <param name="password">The user's current password</param>
+    /// <returns>A <see cref="BaseResponse" /> containing the code and the message returned from the Authware API</returns>
+    /// <exception cref="Exception">
+    ///     This gets thrown if the application id is null which would be if
+    ///     <see cref="InitializeApplicationAsync" /> hasn't been called
+    /// </exception>
+    /// <exception cref="ArgumentNullException">Throws if the password is null</exception>
+    /// <exception cref="AuthwareException">
+    ///     Thrown if the data provided is not acceptable by the Authware API, the hardware ID did not match (if enabled), the
+    ///     application version is out-of-date (if enabled) or the password is invalid
+    /// </exception>
+    public static async Task<BaseResponse> RegenerateApiKeyAsync(string password)
+    {
+        var (success, error, response) = await ExecuteAuthwareInstancedMethod(async () =>
+            await Authware.RegenerateApiKeyAsync(password));
+
+        return HandleResponse(success, error, response);
+    }
 
     /// <summary>
     ///     Logs the user out of your application, this deletes the cached auth token, this will not do anything if the user is
