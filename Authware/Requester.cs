@@ -29,7 +29,7 @@ internal class Requester
             UseProxy = false,
             Proxy = null,
             ServerCertificateCustomValidationCallback = (_, certificate2, _, _) =>
-                certificate2.IssuerName.Name!.Contains("CN=Cloudflare Inc ECC CA-3, O=Cloudflare, Inc., C=US") ||
+                certificate2.IssuerName.Name!.Contains("CN=Cloudflare Inc ECC CA-3") ||
                 certificate2.IssuerName.Name.Contains(", O=Let's Encrypt, C=US")
         })
         {
