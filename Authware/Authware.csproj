@@ -10,7 +10,7 @@
         <Title>Authware API wrapper</Title>
         <Authors>Authware Technologies</Authors>
         <Description>Authware wrapper for .NET (netstandard2.0)</Description>
-        <Copyright>Copyright 2022 (C) Authware Technologies</Copyright>
+        <Copyright>Copyright 2023 (C) Authware Technologies</Copyright>
         <PackageDescription>Authware wrapper for .NET (netstandard2.0)</PackageDescription>
         <Summary>Authware wrapper for .NET (netstandard2.0)</Summary>
         <PackageProjectUrl>https://github.com/AuthwareCloud/dotnet-sdk</PackageProjectUrl>
@@ -27,12 +27,12 @@
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>authware.snk</AssemblyOriginatorKeyFile>
         <PublicSign>true</PublicSign>
-        <PackageReleaseNotes>Implemented new features (API keys)</PackageReleaseNotes>
+        <PackageReleaseNotes>Fixed SSL certificate verification callback</PackageReleaseNotes>
         <ApplicationIcon>authware-s.ico</ApplicationIcon>
         <PackageIcon>authware-s.png</PackageIcon>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <PackageVersion>1.2.7</PackageVersion>
+        <PackageVersion>1.2.8</PackageVersion>
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
