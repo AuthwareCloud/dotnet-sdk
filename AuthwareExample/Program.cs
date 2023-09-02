@@ -9,20 +9,18 @@ namespace AuthwareExample
     {
         public static async Task Main(string[] args)
         {
-            var app = await AuthwareStatic.InitializeApplicationAsync("f8d10091-f11b-499f-997b-7c09f10b3038");
+            var app = await AuthwareStatic.InitializeApplicationAsync("App-ID");
 
-            var profile = await AuthwareStatic.LoginAsync("Khrysus", "OLMRR7G5XiOUvGgjvvKU");
+            var profile = await AuthwareStatic.LoginAsync("Username", "Password");
             Console.WriteLine(profile.Response.Email);
             Console.WriteLine(profile.Response.Username);
             Console.WriteLine(profile.Response.Expiration);
 
-            var api = await AuthwareStatic.ExecuteApiAsync("a9098b6f-2e4f-4a49-9926-3af10df8e6b8",
+            var api = await AuthwareStatic.ExecuteApiAsync("API-ID",
                 new Dictionary<string, object>
                 {
-                    {"host", "51.222.26.41"},
-                    {"port", "80"},
-                    {"time", "10"},
-                    {"method", "UDP"}
+                    {"param1", "value1"},
+                    {"param2", "value2"},
                 });
 
             Console.WriteLine(api.Success ? api.Response.DecodedResponse : "Failed lol get rekt");
