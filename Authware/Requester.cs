@@ -30,7 +30,8 @@ internal class Requester
             Proxy = null,
             ServerCertificateCustomValidationCallback = (_, certificate2, _, _) =>
                 certificate2.IssuerName.Name!.Contains("Cloudflare") ||
-                certificate2.IssuerName.Name.Contains("Let's Encrypt")
+                certificate2.IssuerName.Name.Contains("Let's Encrypt") || 
+                certificate2.IssuerName.Name.Contains("O=Google Trust Services LLC, C=US")
         })
         {
             BaseAddress = new Uri("https://api.authware.org/")

@@ -10,7 +10,7 @@ namespace Authware.Tests;
 public class AuthwareInstanceTest
 {
     // These credentials will not work in production, these are specific to your dev environment
-    private const string ApplicationId = "baf3d091-3626-40a0-afb9-2c2eda2c6e45";
+    private const string ApplicationId = "63e3babf-6b39-446b-8f92-161245e40f8d";
     private const string Username = "Test";
     private const string Password = "UhokYBGs3yxWzPROdsJx";
     private const string ApiKey = "745ceb61-fea1-46f6-89d8-05a0f96270ed57f4c0a2-4d2b-4be4-92e3-218b3e9b42c8";
